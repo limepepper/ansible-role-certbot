@@ -1,0 +1,32 @@
+---
+
+galaxy_info:
+  role_name: certbot
+  author: Tom Hodder
+  description: Install certbot, obtain and renew letsencrypt certs
+  company: Lime Pepper Ltd
+
+  # issue_tracker_url: http://example.com/issue/tracker
+
+  license: license (MIT)
+
+  min_ansible_version: 2.5
+
+  # min_ansible_container_version:
+  # github_branch:
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - xenial
+
+  galaxy_tags:
+    - web
+    - ssl
+    - crypto
+    - hosting
+    - letsencrypt
+
+dependencies: []
+  # - src: git+https://github.com/limepepper/ansible-role-apache.git
+  # - src: git+https://github.com/limepepper/ansible-role-mysql.git
