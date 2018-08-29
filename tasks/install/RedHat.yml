@@ -4,7 +4,8 @@
   become: yes
   block:
 
-  - package:
+  - name: install distro specific certbot packages (os_family == RedHat)
+    package:
       name: "{{ certbot_packages }}"
 
   # - pip:

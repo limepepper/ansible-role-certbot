@@ -10,6 +10,7 @@ env:
   - distro: ubuntu1804
   - distro: debian9
   - distro: fedora28
+    docker_profile: tomhodder
 
 script:
   # Download test shim.
