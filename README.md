@@ -28,6 +28,8 @@ amazon route53, you set the credentials into environment variables;
       AWS_SECRET_ACCESS_KEY: "{{ lookup('env','AWS_SECRET_ACCESS_KEY') }}"
 ~~~
 
+
+
 This role currently supports the following DNS hosting providers.
 
 - digitalocean
@@ -41,7 +43,7 @@ domain is on route53)
 
 ~~~yaml
 ---
-- hosts: romfordmakerspace.org
+- hosts: mygoodwebsite.com
   become: true
 
   tasks:
@@ -49,55 +51,67 @@ domain is on route53)
       name: limepepper.certbot
 
   - certbot:
-      domain: romfordmakerspace.org
+      domain: mygoodwebsite.com
       alternatives:
-        - www.romfordmakerspace.org
+        - www.mygoodwebsite.com
       email: hello@limepepper.co.uk
       plugin: dns-route53
       # required if auto-renewing certificate
-      document_root: /var/www/romfordmakerspace.org
+      document_root: /var/www/mygoodwebsite.com
       auto_renew: yes
     environment:
       AWS_ACCESS_KEY_ID: "{{ lookup('env','AWS_ACCESS_KEY_ID') }}"
       AWS_SECRET_ACCESS_KEY: "{{ lookup('env','AWS_SECRET_ACCESS_KEY') }}"
 ~~~
 
-This will output an SSL certificate to the following location;
-
-`/etc/letsencrypt/live/romfordmakerspace.org/cert.pem`
-
-and you can configure that into your virtual host configuration as required. See
-here for an example of using [certbot with wordpress]()
+This will output an SSL key, cert and chain file to the following location;
 
 ~~~ yml
 TASK [certbot] ********************************************************************************************************
-task path: site-romfordmakerspace.org.yml:21
-changed: [romfordmakerspace.org] => {
+task path: site-mygoodwebsite.com.yml:21
+changed: [mygoodwebsite.com] => {
     "changed": true,
     "rc": 0
 }
 
 STDOUT:
-
-IMPORTANT NOTES:
  - Congratulations! Your certificate and chain have been saved at:
-   /etc/letsencrypt/live/xxx.romfordmakerspace.org-0001/fullchain.pem
+   /etc/letsencrypt/live/mygoodwebsite.com/cert.pem
+   /etc/letsencrypt/live/mygoodwebsite.com/fullchain.pem
    Your key file has been saved at:
-   /etc/letsencrypt/live/xxx.romfordmakerspace.org-0001/privkey.pem
+   /etc/letsencrypt/live/mygoodwebsite.com/privkey.pem
    Your cert will expire on 2018-11-27.
-STDERR:
 
-Saving debug log to /var/log/letsencrypt/letsencrypt.log
-Found credentials in environment variables.
-Plugins selected: Authenticator dns-route53, Installer None
-Renewing an existing certificate
-Performing the following challenges:
-dns-01 challenge for xxx.romfordmakerspace.org
-dns-01 challenge for xxx.www.romfordmakerspace.org
+dns-01 challenge for mygoodwebsite.com
+dns-01 challenge for www.mygoodwebsite.com
 Waiting for verification...
 Cleaning up challenges
 
 ~~~
+
+and you can configure that into your virtual host configuration as required. See
+here for an example of using [certbot with wordpress](). But you would use those
+files something like this;
+
+``` apache
+<VirtualHost *:443>
+  ServerName mygoodwebsite.com
+  ServerAlias www.mygoodwebsite.com
+  DocumentRoot /var/www/romfordmakerspace
+
+  SSLEngine on
+
+  SSLCertificateFile /etc/letsencrypt/live/mygoodwebsite.com/cert.pem
+  SSLCertificateKeyFile /etc/letsencrypt/live/mygoodwebsite.com/privkey.pem
+  SSLCertificateChainFile /etc/letsencrypt/live/mygoodwebsite.com/chain.pem
+
+  ErrorLog /var/log/httpd/mygoodwebsite.com-error.log
+  CustomLog /var/log/httpd/mygoodwebsite.com-access.log combined
+</VirtualHost>
+
+
+```
+
 
 
 ## HTTP Challenge, apache webserver, certonly plugin
@@ -148,13 +162,12 @@ service. The certbot will use that to stage it's http challenge response.
         ServerAliases:
           - www.mywordpresssite2.com
         DocumentRoot: /var/www/mywordpresssite2.com
-        SSLCertFile: /etc/letsencrypt/live/romfordmakerspace.org/cert.pem
-        SSLCertKeyFile: /etc/letsencrypt/live/romfordmakerspace.org/privkey.pem
-        SSLCertChainFile: /etc/letsencrypt/live/romfordmakerspace.org/chain.pem
+        SSLCertFile: /etc/letsencrypt/live/mygoodwebsite.com/cert.pem
+        SSLCertKeyFile: /etc/letsencrypt/live/mygoodwebsite.com/privkey.pem
+        SSLCertChainFile: /etc/letsencrypt/live/mygoodwebsite.com/chain.pem
       notify:
         - reload apache
 
 ~~~
 
 
-certbot certonly --webroot -w /var/www/example -d www.example.com -d example.com -w /var/www/other -d other.example.net -d another.other.example.net
