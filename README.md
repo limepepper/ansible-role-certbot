@@ -19,7 +19,14 @@ certbot is a tool to automate these authentication processes - referred to as
 
 If your domain is hosted with one of the supported DNS providers, then dns-01 is the
 simplist way to authenticate a request for a webserver certificate. You will need
-to have access to appropriate API/cli credentials for your account.
+to have access to appropriate API/cli credentials for your account. For example with
+amazon route53, you set the credentials into environment variables;
+
+~~~ yaml
+    environment:
+      AWS_ACCESS_KEY_ID: "{{ lookup('env','AWS_ACCESS_KEY_ID') }}"
+      AWS_SECRET_ACCESS_KEY: "{{ lookup('env','AWS_SECRET_ACCESS_KEY') }}"
+~~~
 
 This role currently supports the following DNS hosting providers.
 

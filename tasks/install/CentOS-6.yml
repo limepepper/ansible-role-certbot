@@ -1,0 +1,33 @@
+---
+
+- tags: [ letsencrypt, certbot ]
+  block:
+
+  - package:
+      name:
+        # - certbot
+        - python34
+        - python34-setuptools
+        # - python3-certbot-apache
+        # - python-certbot-apache
+        # - python3-certbot
+        # - python3-zope.component
+        # - python3-zope.interface
+        # - python3-zope.hookable
+
+  - name: configure pip3
+    shell:
+      cmd: |
+        cd /usr/lib/python3.4/site-packages/
+        python3 easy_install.py pip
+      creates: /usr/bin/pip3
+
+  - pip:
+      name:
+        - certbot
+        - certbot-dns-digitalocean
+        - certbot-dns-ovh
+        - certbot-dns-route53
+        # - certbot-vault
+      executable: /usr/bin/pip3
+

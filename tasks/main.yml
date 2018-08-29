@@ -8,9 +8,9 @@
   - include_tasks: install/main.yml
     tags: always
 
-  - name: process each of the domains
-    include_tasks: install/cert.yml
-    with_items: "{{ certbot_certs }}"
-    loop_control:
-      loop_var: cert
-    tags: always
+  # - name: process each of the domains
+  #   include_tasks: install/cert.yml
+  #   with_items: "{{ certbot_certs }}"
+  #   loop_control:
+  #     loop_var: cert
+  #   tags: always
