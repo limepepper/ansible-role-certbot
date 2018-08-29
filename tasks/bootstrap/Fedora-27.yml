@@ -1,0 +1,12 @@
+---
+
+- tags: main-run
+  become: True
+  block:
+
+  - name: install shim packages
+    action: >
+      {{ ansible_pkg_mgr }} name={{ item }} state=present
+    with_items:
+      - libselinux-python
+      - selinux-policy

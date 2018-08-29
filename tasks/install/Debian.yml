@@ -1,0 +1,29 @@
+---
+
+- tags: [ certbot ]
+  become: yes
+  block:
+
+  # - package:
+  #     name:
+  #       - software-properties-common
+
+  # # On Debian target
+  # - apt_repository:
+  #     repo: 'ppa:certbot/certbot'
+  #     codename: trusty
+
+  - package:
+      name: certbot
+    when:
+    - ansible_distribution != 'Debian'
+    - ansible_distribution_major_version != '8'
+
+  - apt:
+      name: certbot
+      default_release: jessie-backports
+    when:
+      - ansible_distribution == 'Debian'
+      - ansible_distribution_major_version == '8'
+
+

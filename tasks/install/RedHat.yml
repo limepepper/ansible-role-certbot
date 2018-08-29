@@ -1,0 +1,18 @@
+---
+
+- tags: [ letsencrypt, certbot ]
+  become: yes
+  block:
+
+  - package:
+      name: "{{ certbot_packages }}"
+
+  # - pip:
+  #     name:
+  #       - certbot
+  #       - certbot-dns-digitalocean
+  #       - certbot-dns-ovh
+  #       - certbot-dns-route53
+  #       # - certbot-vault
+  #     executable: /usr/bin/pip3
+

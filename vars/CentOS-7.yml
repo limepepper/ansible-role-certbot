@@ -1,0 +1,7 @@
+---
+
+certbot_packages:
+  - certbot
+  - python2-certbot-dns-route53
+  - python2-certbot-dns-digitalocean
+  - python2-certbot-dns-ovh

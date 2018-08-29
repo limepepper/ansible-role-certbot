@@ -1,0 +1,22 @@
+---
+
+- tags: [ certbot ]
+  become: yes
+  block:
+
+  # - package:
+  #     name:
+  #       - software-properties-common
+
+  # # On Debian target
+  # - apt_repository:
+  #     repo: 'ppa:certbot/certbot'
+  #     codename: trusty
+
+  - apt_repository:
+      repo: deb http://ftp.debian.org/debian jessie-backports main
+      state: present
+
+  - apt:
+      name: certbot
+      default_release: jessie-backports

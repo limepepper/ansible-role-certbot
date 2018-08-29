@@ -1,0 +1,26 @@
+---
+
+- tags: [ certbot ]
+  become: yes
+  block:
+
+  # - package:
+  #     name:
+  #       - software-properties-common
+
+  - apt_repository:
+      repo: deb http://ftp.debian.org/debian stretch-backports main
+      state: present
+
+  - apt:
+      name: certbot
+      default_release: stretch-backports
+
+  - apt_repository:
+      repo: deb http://ftp.de.debian.org/debian sid main
+      state: present
+
+  - apt:
+      name:
+        - python3-certbot-dns-route53
+        - python3-certbot-dns-digitalocean

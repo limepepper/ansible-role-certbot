@@ -1,0 +1,9 @@
+---
+
+- tags: [ always ]
+  block:
+
+  - fail:
+      msg: not implemented
+
+#  - win_chocolatey: name=pscx
