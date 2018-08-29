@@ -62,12 +62,3 @@
             {{ ansible_lsb.id }}
             {{ ansible_machine }}
 
-
-  # debian-9 compatible seems to have mouse=a set
-  # annoyance scale (4/11)
-  - name: use vim.tiny for vi
-    alternatives:
-      name: vi
-      path: /usr/bin/vim.tiny
-    # when: false
-
