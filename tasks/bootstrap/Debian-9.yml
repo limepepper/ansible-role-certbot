@@ -7,9 +7,10 @@
   - debug:
       msg: "using the Debian-9 boot strapper"
 
-  - name: install shim packages
+  - name: install shim packages for Debian 9
     apt:
-      # update_cache: yes
+      update_cache: yes
+      cache_valid_time: 3600
       install_recommends: no
       name:
         - python-pip

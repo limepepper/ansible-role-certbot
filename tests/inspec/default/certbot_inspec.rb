@@ -28,9 +28,9 @@ control 'check-certbot-01' do
   title "Check certbot for node: #{vars['ansible_hostname']}"
   desc '   Prevent unexpected settings.  '
 
-  describe file('/usr/bin/certbot') do
-    it { should be_file }
-  end
+  # describe file('/usr/bin/certbot') do
+  #   it { should be_file }
+  # end
 
   describe command('certbot --help') do
     its('stdout') { should match(/Certbot can obtain and install HTTPS\/TLS\/SSL certificates/) }
@@ -46,6 +46,15 @@ control 'check-certbot-01' do
   describe command('certbot plugins') do
     its('stdout') { should match(/^\* dns-route53/) }
     its('exit_status') { should eq 0 }
+  end
+
+  describe command('certbot plugins') do
+    its('stdout') { should match(/^\* dns-digitalocean/) }
+    its('exit_status') { should eq 0 }
+  end
+
+  describe file('/etc/letsencrypt') do
+    it { should be_directory }
   end
 
   describe command('certbot plugins') do

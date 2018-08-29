@@ -4,23 +4,33 @@
   become: yes
   block:
 
+  - pip:
+      name:
+        - certbot
+        - certbot-dns-digitalocean
+        - certbot-dns-ovh
+        - certbot-dns-route53
+
+  # There is an older version in the stretch-backports debian repo
+  # but no dns plugins, which are in sid
+
   # - package:
   #     name:
   #       - software-properties-common
 
-  - apt_repository:
-      repo: deb http://ftp.debian.org/debian stretch-backports main
-      state: present
+  # - apt_repository:
+  #     repo: deb http://ftp.debian.org/debian stretch-backports main
+  #     state: present
 
-  - apt:
-      name: certbot
-      default_release: stretch-backports
+  # - apt:
+  #     name: certbot
+  #     default_release: stretch-backports
 
-  - apt_repository:
-      repo: deb http://ftp.de.debian.org/debian sid main
-      state: present
+  # - apt_repository:
+  #     repo: deb http://ftp.de.debian.org/debian sid main
+  #     state: present
 
-  - apt:
-      name:
-        - python3-certbot-dns-route53
-        - python3-certbot-dns-digitalocean
+  # - apt:
+  #     name:
+  #       - python3-certbot-dns-route53
+  #       - python3-certbot-dns-digitalocean
