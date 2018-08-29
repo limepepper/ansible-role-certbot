@@ -130,7 +130,7 @@ service. The certbot will use that to stage it's http challenge response.
 
   tasks:
 
-    - name: the http vhost to stage the http challenge response
+    - name: create apache virtualhost for http site (used for certbot challenge)
       apache_vhost:
         ServerName: mywordpresssite2.com
         ServerAliases:
@@ -138,7 +138,7 @@ service. The certbot will use that to stage it's http challenge response.
         DocumentRoot: /var/www/mywordpresssite2.com
       register: mywordpresssite2_com_vhost
 
-    - name: reload apache now if we added a vhost
+    - name: reload apache now if we added/changed http virtualhost
       service:
         name: "{{ apache_service_name }}"
         state: reloaded
@@ -155,6 +155,9 @@ service. The certbot will use that to stage it's http challenge response.
         # or webroot plugin is used
         document_root: /var/www/mywordpresssite.com
         auto_renew: yes
+      # if the certificate is updated, we need to reload apache to pick it up
+      notify:
+        - reload apache
 
     - name: now we have the cert, create a ssl vhost config for it
       apache_vhost_ssl:

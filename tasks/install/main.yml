@@ -1,6 +1,6 @@
 ---
 
-- tags: [ letsencrypt ]
+- tags: [ certbot, letsencrypt ]
   become: yes
   block:
 
@@ -16,4 +16,3 @@
     loop_control:
       loop_var: include_letsencrypt_tasks
     tags: always
-    # when: mysql_install
