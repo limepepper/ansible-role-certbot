@@ -31,7 +31,3 @@
     - name: import the role limepepper.wordpress in test.yml playbook
       import_role:
         name: '{{playbook_dir}}/..'
-
-    - gem:
-        name: inspec
-        state: present
