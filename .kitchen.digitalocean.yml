@@ -6,7 +6,8 @@ driver:
   private_networking: false
   region: lon1
   tags: do_test_pool
-  firewalls: <%= ENV['DO_FIREWALL_ID'] %>
+  # the second firewall id is for the letsencypt inbound port 80 access
+  firewalls: <%= ENV['DO_FIREWALL_ID'] %>,<%= ENV['DO_FIREWALL_ID2'] %>
 
 transport:
   ssh_key: ~/.ssh/id_rsa.do-buildbot
@@ -42,3 +43,28 @@ suites:
       #   tk_dep_roles:
       #     - limepepper.mysql
       #     - limepepper.apache
+  - name: plugin-dns-digitalocean
+    provisioner:
+      playbook: tests/test-certbot-plugin-dns-digitalocean.yml
+    verifier:
+      inspec_tests:
+        - tests/inspec/default
+        - tests/inspec/certchecks
+        - tests/inspec/certbot-plugin-dns-digitalocean
+  - name: plugin-dns-route53
+    provisioner:
+      playbook: tests/test-certbot-plugin-dns-route53.yml
+    verifier:
+      inspec_tests:
+        - tests/inspec/default
+        - tests/inspec/certchecks
+        # - tests/inspec/certbot-plugin-dns-digitalocean
+  - name: plugin-webroot
+    provisioner:
+      playbook: tests/test-certbot-plugin-webroot.yml
+    verifier:
+      inspec_tests:
+        - tests/inspec/default
+        - tests/inspec/certchecks
+        - tests/inspec/plugin-webroot
+        # - https://github.com/dev-sec/ssl-benchmark

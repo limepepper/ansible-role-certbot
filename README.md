@@ -2,11 +2,92 @@
 Certbot ansible role
 =========
 
-Check [the wiki](https://github.com/limepepper/ansible-role-certbot/wiki) for more detail documentation
+This role handles installing the certbot cli tool on a remote ansible node, and
+ subsequently obtaining and renewing [Let's Encrypt](https://letsencrypt.org/)
+ certificates using a supported authentication [plugin](https://certbot.eff.org/docs/using.html#getting-certificates-and-choosing-plugins).
+It is tested against the current versions of Ubuntu, CentOS, Fedora and Debian,
+and some legacy systems.
 
-This role handles installing certbot, and subsequently obtaining and renewing
-[Let's Encrypt](https://letsencrypt.org/) certificates using one or more of the
-supported authentication [plugins](https://certbot.eff.org/docs/using.html#getting-certificates-and-choosing-plugins).
+To install to your roles directory, use the ansible-galaxy cli:
+```shell
+$ ansible-galaxy install limepepper.certbot
+```
+
+The role assumes that the user is familiar with generating letsencrypt
+certificates with certbot. Please see the [certbot](https://certbot.eff.org/docs/intro.html)
+and [letsencrypt](https://letsencrypt.org/) documentation for background on using
+those services, and the available options.
+
+## Installing certbot
+
+Certbot is installed to ansible hosts by importing the role into a play like so:
+
+```yaml
+- hosts: webservers
+
+  tasks:
+    - import_role:
+        name: limepepper.certbot
+```
+
+ Or using classic role dependency syntax:
+
+```yml
+- hosts: webservers
+  roles:
+    - limepepper.certbot
+
+  tasks:
+    <...>
+```
+
+## Generating certificates
+
+Importing the role exposes a module which can be used to generate and renew a certificate:
+
+```yaml
+    - certbot:
+        plugin: webroot
+        domain: mysite.com
+        alternatives:
+          - www.mysite.com
+        email: certbot-dev@mywebsite.com
+        document_root: /var/www/testdomain
+        auto_renew_http: yes
+```
+
+If you are using the [webroot plugin](https://certbot.eff.org/docs/using.html#webroot)
+you will need to place the certbot module after your tasks which setup and start
+a webserver, so letsencrypt can connect back to authenticate your request. For
+example:
+
+```yaml
+    - name: install httpd.conf file for mywebsite.com
+      template:
+        src: httpd-conf.j2
+        dest: /etc/apache2/site-enabled/mywebsite.com.conf"
+      register: vhost_template_conf
+
+    - name: forcing restart of apache for this vhost
+      service:
+        name: apache2
+        state: restarted
+      when: vhost_template_conf.changed
+
+    - certbot:
+        plugin: webroot
+        domain: mysite.com
+        alternatives:
+          - www.mysite.com
+        email: certbot-dev@mywebsite.com
+        document_root: /var/www/testdomain
+        auto_renew_http: yes
+```
+
+Check [the wiki](https://github.com/limepepper/ansible-role-certbot/wiki) for
+more detailed documentation on using the variables and the DNS plugins.
+
+## How letsencrypt authenticates a certificate request
 
 In order for Let's Encrypt to generate a certificate for your domain (e.g. for
 use on your webserver), they require that you prove that you are in control of the domain.
@@ -36,7 +117,6 @@ This role currently supports the following DNS hosting providers.
 
 - digitalocean
 - route53
-- ovh (experimental)
 
 ## DNS challenge, route53 plugin
 
@@ -58,9 +138,9 @@ domain is on route53)
         - www.mygoodwebsite.com
       email: hello@limepepper.co.uk
       plugin: dns-route53
-      # required if auto-renewing certificate
-      document_root: /var/www/mygoodwebsite.com
       auto_renew: yes
+      # required if auto-renewing certificates using webonly plugin
+      document_root: /var/www/mygoodwebsite.com
     environment:
       AWS_ACCESS_KEY_ID: "{{ lookup('env','AWS_ACCESS_KEY_ID') }}"
       AWS_SECRET_ACCESS_KEY: "{{ lookup('env','AWS_SECRET_ACCESS_KEY') }}"
@@ -69,23 +149,14 @@ domain is on route53)
 This will output an SSL key, cert and chain file to the following location;
 
 ~~~ yml
-TASK [certbot] ********************************************************************************************************
-task path: site-mygoodwebsite.com.yml:21
-changed: [mygoodwebsite.com] => {
-    "changed": true,
-    "rc": 0
-}
-
+TASK [certbot]
+**************************************************************************
 STDOUT:
  - Congratulations! Your certificate and chain have been saved at:
    /etc/letsencrypt/live/mygoodwebsite.com/cert.pem
    /etc/letsencrypt/live/mygoodwebsite.com/fullchain.pem
-   Your key file has been saved at:
    /etc/letsencrypt/live/mygoodwebsite.com/privkey.pem
-   Your cert will expire on 2018-11-27.
 
-dns-01 challenge for mygoodwebsite.com
-dns-01 challenge for www.mygoodwebsite.com
 Waiting for verification...
 Cleaning up challenges
 
