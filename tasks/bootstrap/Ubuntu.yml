@@ -5,7 +5,7 @@
   block:
 
   - debug:
-      msg: "using the Ubuntu boot strapper"
+      msg: "using the Ubuntu boot strapper (Ubuntu-generic)"
 
   - name: install shim packages
     apt:

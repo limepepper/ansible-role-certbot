@@ -7,15 +7,6 @@ vars_json = json('/var/cache/ansible/attributes/hostvars.json')
 
 vars = vars_json.params
 
-control 'check-attributes-01' do
-  impact 0.6
-  title "Check attribtues for node: #{vars['ansible_hostname']}"
-  desc '      Checking the hostvars cache is sensible  '
-  describe file('/var/cache/ansible/attributes/hostvars.json') do
-    it { should exist }
-    #  its('mode') { should cmp 0644 }
-  end
-end
 
 #    ___         _   ___      _     _____       _
 #   / __|___ _ _| |_| _ ) ___| |_  |_   _|__ __| |_ ___
@@ -23,7 +14,7 @@ end
 #   \___\___|_|  \__|___/\___/\__|   |_|\___/__/\__/__/
 #
 
-control 'check-certbot-01' do
+control 'check-certbot-generated-certificate-01' do
   impact 0.6
   title "Check certbot for node: #{vars['ansible_hostname']}"
   desc '   Prevent unexpected settings.  '

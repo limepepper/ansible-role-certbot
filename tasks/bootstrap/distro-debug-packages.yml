@@ -1,8 +1,22 @@
 ---
 
+
+- name: check for debug path
+  stat:
+    path: /var/cache/ansible/debug
+  register: p
+
+- debug:
+    var: p
+
 - tags: [ debug ]
   become: True
+  when: p.stat.isdir is not defined
   block:
+
+  - debug:
+      msg: |
+        {{ '/var/cache/ansible/debug' is directory }}
 
   - name: "gather distro vars ({{ ansible_distribution }})"
     include_tasks: "{{ distro_specific_tools }}"
@@ -18,7 +32,6 @@
     loop_control:
       loop_var: distro_specific_tools
     # tags: [ always ]
-    when: not "/var/cache/ansible/debug" is directory
 
   - copy:
       content: |
@@ -33,12 +46,10 @@
       owner: root
       group: root
       mode: 0775
-    when: not "/var/cache/ansible/debug" is directory
 
   - file:
       name: "/var/cache/ansible/attributes"
       state: directory
-    when: not "/var/cache/ansible/debug" is directory
 
   # - debug:
   #     var: hostvars[inventory_hostname]
@@ -46,7 +57,6 @@
   - copy:
       content: "{{ hostvars[inventory_hostname] | strip_fieldattributes | to_nice_json }}"
       dest: "/var/cache/ansible/attributes/hostvars.json"
-    when: not "/var/cache/ansible/debug" is directory
 
   - file:
       name: /var/cache/ansible/debug

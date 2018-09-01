@@ -7,7 +7,7 @@ vars_json = json('/var/cache/ansible/attributes/hostvars.json')
 
 vars = vars_json.params
 
-control 'check-attributes' do
+control 'check-attributes-1' do
   impact 0.6
   title "Check attribtues for node: #{vars['ansible_hostname']}"
   desc '      Checking the hostvars cache is sensible  '

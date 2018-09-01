@@ -4,7 +4,7 @@ driver:
   name: digitalocean
   size: s-2vcpu-4gb
   private_networking: false
-  region: lon1
+  region: ams2
   tags: do_test_pool
   # the second firewall id is for the letsencypt inbound port 80 access
   firewalls: <%= ENV['DO_FIREWALL_ID'] %>,<%= ENV['DO_FIREWALL_ID2'] %>
@@ -23,8 +23,8 @@ platforms:
   - name: fedora-28
 
 # kitchen-inspec expects test to be in test/integration/%suite%/inspec
-# verifier:
-#   name: inspec
+verifier:
+  name: inspec
 #   # format: junit
 #   # output: path/to/results/%{platform}_%{suite}_inspec.xml
 #   inspec_tests:
@@ -34,8 +34,8 @@ platforms:
 
 suites:
   - name: default
-    provisioner:
-      show_command_output: true
+    # provisioner:
+      # show_command_output: true
       # extra_vars:
       #   webserver_options:
       #     - mod-php
@@ -48,23 +48,23 @@ suites:
       playbook: tests/test-certbot-plugin-dns-digitalocean.yml
     verifier:
       inspec_tests:
-        - tests/inspec/default
-        - tests/inspec/certchecks
-        - tests/inspec/certbot-plugin-dns-digitalocean
+        - test/integration/default
+        - test/integration/certchecks
+        # - test/integration/plugin-dns-digitalocean
   - name: plugin-dns-route53
     provisioner:
       playbook: tests/test-certbot-plugin-dns-route53.yml
     verifier:
       inspec_tests:
-        - tests/inspec/default
-        - tests/inspec/certchecks
+        - test/integration/default
+        - test/integration/certchecks
         # - tests/inspec/certbot-plugin-dns-digitalocean
   - name: plugin-webroot
     provisioner:
       playbook: tests/test-certbot-plugin-webroot.yml
     verifier:
       inspec_tests:
-        - tests/inspec/default
-        - tests/inspec/certchecks
-        - tests/inspec/plugin-webroot
+        - test/integration/default
+        - test/integration/certchecks
+        # - test/integration/plugin-webroot
         # - https://github.com/dev-sec/ssl-benchmark

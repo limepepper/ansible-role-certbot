@@ -9,7 +9,7 @@
       name:
         - epel-release
 
-  - name: install shim packages
+  - name: install shim packages (CentOS-6)
     package:
       name:
         - libselinux-python
