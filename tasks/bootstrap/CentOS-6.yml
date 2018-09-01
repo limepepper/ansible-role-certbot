@@ -17,6 +17,5 @@
         - python-pip
         - unzip
         - git
-        - lsof
         - net-tools
         - curl

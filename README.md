@@ -1,12 +1,13 @@
+Devel branch: [![Build Status](https://travis-ci.org/limepepper/ansible-role-certbot.svg?branch=devel)](https://travis-ci.org/limepepper/ansible-role-certbot) Master branch: [![Build Status](https://travis-ci.org/limepepper/ansible-role-certbot.svg?branch=master)](https://travis-ci.org/limepepper/ansible-role-certbot)
 
 Certbot ansible role
 =========
 
 This role handles installing the certbot cli tool on a remote ansible node, and
  subsequently obtaining and renewing [Let's Encrypt](https://letsencrypt.org/)
- certificates using a supported authentication [plugin](https://certbot.eff.org/docs/using.html#getting-certificates-and-choosing-plugins).
+ certificates using a supported certbot authentication [plugin](https://certbot.eff.org/docs/using.html#getting-certificates-and-choosing-plugins).
 It is tested against the current versions of Ubuntu, CentOS, Fedora and Debian,
-and some legacy systems.
+and some legacy systems. You can checkout the current statuses on our [Travis](https://travis-ci.org/limepepper/ansible-role-certbot) status page.
 
 To install to your roles directory, use the ansible-galaxy cli:
 ```shell
@@ -17,6 +18,8 @@ The role assumes that the user is familiar with generating letsencrypt
 certificates with certbot. Please see the [certbot](https://certbot.eff.org/docs/intro.html)
 and [letsencrypt](https://letsencrypt.org/) documentation for background on using
 those services, and the available options.
+
+
 
 ## Installing certbot
 
@@ -89,6 +92,10 @@ more detailed documentation on using the variables and the DNS plugins.
 
 ## How letsencrypt authenticates a certificate request
 
+certbot is a tool to automate the processes that letsenrypt uses to authenticate
+that a certificate requestor has control of a domain - these processes are
+referred to as `challenges`. The underlying system is called [ACME]https://en.wikipedia.org/wiki/Automated_Certificate_Management_Environment).
+
 In order for Let's Encrypt to generate a certificate for your domain (e.g. for
 use on your webserver), they require that you prove that you are in control of the domain.
 
@@ -97,8 +104,7 @@ You can do this in one of several ways. The 2 supported by this role are
 1. By serving a specified file on your website, on port 80. This is called (http-01)
 2. By creating a specified TXT record in the DNS for your domain (dns-01)
 
-certbot is a tool to automate these authentication processes - referred to as
-`challenges`
+
 
 If your domain is hosted with one of the supported DNS providers, then dns-01 is the
 simplist way to authenticate a request for a webserver certificate. You will need

@@ -62,4 +62,3 @@
             {{ ansible_lsb }}
             {{ ansible_lsb.id }}
             {{ ansible_machine }}
-

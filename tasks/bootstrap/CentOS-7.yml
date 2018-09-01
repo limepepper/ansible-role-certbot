@@ -18,7 +18,8 @@
       - python-pip
       - unzip
       - git
-      - MySQL-python
+      # unlikely to be generally applicable, do in mysql instead
+      # - MySQL-python
       - net-tools
       - curl
 
