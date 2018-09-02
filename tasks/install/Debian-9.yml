@@ -34,3 +34,23 @@
   #     name:
   #       - python3-certbot-dns-route53
   #       - python3-certbot-dns-digitalocean
+
+  - name: install certbot systemd service unit file
+    template:
+      src: systemd/certbot.service
+      dest: /etc/systemd/system/{{ certbot_timer_servicename }}.service
+    register: certbot_service_systemd_unit
+
+  - name: install certbot systemd timer unit file
+    template:
+      src: systemd/certbot.timer
+      dest: "/etc/systemd/system/{{ certbot_timer_servicename }}.timer"
+    register: certbot_timer_systemd_unit
+
+  - name: Make sure {{ certbot_timer_servicename }} timer is running
+    systemd:
+      state: started
+      enabled: yes
+      daemon_reload: yes
+      name: "{{ certbot_timer_servicename }}.timer"
+    when: certbot_service_systemd_unit.changed or certbot_timer_systemd_unit.changed

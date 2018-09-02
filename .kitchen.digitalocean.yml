@@ -16,33 +16,28 @@ platforms:
   - name: debian-9
   - name: ubuntu-16
   - name: ubuntu-18
-  # - name: centos-7
   - name: centos-6
+    extra_vars:
+      certbot_timer: cron
+    verifier:
+      attributes:
+        skiplist:
+          - renew-systemd-timer-1
   - name: centos-7
-  # - name: fedora-27
   - name: fedora-28
 
-# kitchen-inspec expects test to be in test/integration/%suite%/inspec
 verifier:
   name: inspec
-#   # format: junit
-#   # output: path/to/results/%{platform}_%{suite}_inspec.xml
-#   inspec_tests:
-#     #- tests/inspec/default
-#     - name: test-wordpress
-#       path: tests/inspec/default
+  attributes:
+    skiplist:
+      - renew-cron-1
+  format: cli
 
 suites:
   - name: default
-    # provisioner:
-      # show_command_output: true
-      # extra_vars:
-      #   webserver_options:
-      #     - mod-php
-      #     - virtualhost
-      #   tk_dep_roles:
-      #     - limepepper.mysql
-      #     - limepepper.apache
+    #   tk_dep_roles:
+    #     - limepepper.mysql
+    #     - limepepper.apache
   - name: plugin-dns-digitalocean
     provisioner:
       playbook: tests/test-certbot-plugin-dns-digitalocean.yml
@@ -66,5 +61,6 @@ suites:
       inspec_tests:
         - test/integration/default
         - test/integration/certchecks
+        - test/integration/timer-checks
         # - test/integration/plugin-webroot
         # - https://github.com/dev-sec/ssl-benchmark

@@ -59,7 +59,7 @@ class CertBotWebrootRenewal():
     for i in range(len(alts)):
       certbot_cmd = certbot_cmd + " -d {0} ".format(alts[i])
 
-    self.module.warn("{0}".format(certbot_cmd))
+    # self.module.warn("{0}".format(certbot_cmd))
 
     result, stdout, stderr = self.module.run_command(certbot_cmd)
 
