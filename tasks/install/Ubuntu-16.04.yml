@@ -7,11 +7,13 @@
       name:
         - software-properties-common
 
-  - apt_repository:
+  - name: add the certbot ppa to Ubuntu 16.04
+    apt_repository:
       repo: 'ppa:certbot/certbot'
       # codename: xenial
 
-  - package:
+  - name: "certbot packages for {{ ansible_distribution }}-{{ ansible_distribution_version }}"
+    package:
       name:
         - certbot
         - python-certbot-apache
