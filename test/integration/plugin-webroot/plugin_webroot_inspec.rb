@@ -1,12 +1,7 @@
-#
-#
-#
-
 # my_services = yaml(content: inspec.profile.file('services.yml')).params
 vars_json = json('/var/cache/ansible/attributes/hostvars.json')
 
 vars = vars_json.params
-
 
 #    ___         _   ___      _     _____       _
 #   / __|___ _ _| |_| _ ) ___| |_  |_   _|__ __| |_ ___
@@ -37,10 +32,10 @@ control 'check-plugin-webroot-01' do
     # its('protocols') { should_not include 'ssl2' }
   end
 
-  #should be_in
+  # should be_in
 
   describe ssl(port: 443).protocols('ssl2') do
-    proc_desc = "on node ==target_hostname} runn)"
+    proc_desc = 'on node ==target_hostname} runn)'
     it(proc_desc) { should_not be_enabled }
     it { should_not be_enabled }
   end
@@ -56,9 +51,7 @@ control 'check-plugin-webroot-01' do
   #   its('ciphers') { should eq '/rc4/i' }
   #   #its('protocols') { should eq 'ssl2' }
   # end
-
 end
-
 
 #                           _            _            _
 #     __ _ _ __   __ _  ___| |__   ___  | |_ ___  ___| |_ ___
@@ -85,7 +78,6 @@ control 'check-plugin-webroot-apache-1' do
     its('body') { should match(/This is a test page YYY/) }
     # its('headers.name') { should eq 'header' }
     its('headers.Content-Type') { should match(/text\/html/) }
-
   end
 
   # | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p'

@@ -32,15 +32,18 @@
       loop_var: distro_specific_vars
     tags: [ always, vars ]
 
-  - debug:
+  - name: display the value of the role_path basename
+    debug:
       msg: "role name {{ ( role_path| basename ) }} is {{ ( role_path| basename ) in hostvars[inventory_hostname]}}"
 
-  - set_fact:
+  - name: merge the logfiles from this role
+    set_fact:
       logfiles: |
         {{ logfiles|default({})|combine( hostvars[inventory_hostname][role_path| basename]['logfiles']|default({}) ) }}
     when: "( role_path| basename ) in hostvars[inventory_hostname]"
 
-  - set_fact:
+  - name: merge the logfiles from this role
+    set_fact:
       logfiles: |
         {{ logfiles|default({})|combine( hostvars[inventory_hostname][role_path| basename|replace('limepepper_','limepepper.')]['logfiles']|default({}) ) }}
     when: "(role_path| basename) in hostvars[inventory_hostname]"

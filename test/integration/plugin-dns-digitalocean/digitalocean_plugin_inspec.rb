@@ -1,12 +1,7 @@
-#
-#
-#
-
 # my_services = yaml(content: inspec.profile.file('services.yml')).params
 vars_json = json('/var/cache/ansible/attributes/hostvars.json')
 
 vars = vars_json.params
-
 
 #    ___         _   ___      _     _____       _
 #   / __|___ _ _| |_| _ ) ___| |_  |_   _|__ __| |_ ___
@@ -31,7 +26,6 @@ control 'check-plugin-dns-digitalocean-1' do
   # describe ssl(port: 443).protocols('ssl2') do
   #   it { should be_enabled }
   # end
-
 end
 
 # skiplist.each do |skip|

@@ -24,26 +24,26 @@
 
               default ipv6: {% if ansible_default_ipv6 is defined and 'address' in ansible_default_ipv6 %}{{ ansible_default_ipv6.address }}{% else %}<undefined>{% endif %}
 
-    - set_fact:
+    - name: if the failed task was service-like, store its name
+      set_fact:
         debug_failed_service: "{{ hostvars[inventory_hostname]['ansible_failed_task']['args']['name'] }}"
       when:
         - '"ansible_failed_task" in hostvars[inventory_hostname]'
         - hostvars[inventory_hostname]['ansible_failed_task']['action'] in ['service','systemd','upstart']
 
-# in ['service','systemd','upstart']
     - name: attempt to determine issue with service under systemd
       shell: "systemctl status {{ debug_failed_service }} -l ; true"
       when:
         - 'ansible_service_mgr == "systemd"'
         - debug_failed_service is defined
+      tags: [ 'skip_ansible_lint' ]
 
     - name: attempt to determine issue with service under upstart
       shell: "service {{ debug_failed_service }} status ; true"
       when:
         - 'ansible_service_mgr == "upstart"'
         - debug_failed_service is defined
-
-
+      tags: [ 'skip_ansible_lint' ]
 
     - name: check for debug path
       stat:

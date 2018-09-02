@@ -1,10 +1,7 @@
-
-#
 skiplist = attribute('skiplist',
                      description: 'list of controls to skip',
                      default: [],
                      required: true)
-
 
 # my_services = yaml(content: inspec.profile.file('services.yml')).params
 vars_json = json('/var/cache/ansible/attributes/hostvars.json')
@@ -18,9 +15,6 @@ control 'renew-systemd-timer-1' do
   impact 0.6
   title "Check certbot systemd timer for #{vars['ansible_hostname']}"
   desc '  If certbot is on a system with systemd, check its timer wsa enabled '
-
-
-
 end
 
 control 'renew-cron-1' do
@@ -49,7 +43,6 @@ control 'renew-cron-1' do
   describe file('/run/systemd/system') do
     it { should_not exist }
   end
-
 end
 
 skiplist.each do |skip|

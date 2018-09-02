@@ -1,7 +1,3 @@
-#
-#
-#
-
 # my_services = yaml(content: inspec.profile.file('services.yml')).params
 vars_json = json('/var/cache/ansible/attributes/hostvars.json')
 
@@ -67,7 +63,6 @@ control 'check-certbot-01' do
     its('stdout') { should match(/^\* dns-digitalocean/) }
     its('exit_status') { should eq 0 }
   end
-
 end
 
 # skiplist.each do |skip|

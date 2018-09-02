@@ -47,7 +47,8 @@
     set_fact:
       bootstrap_done: true
 
-  - file:
+  - name: create the bootstrap cache dir. used as flag for bootstrapping
+    file:
       name: "/var/cache/ansible/bootstrap"
       state: directory
 
