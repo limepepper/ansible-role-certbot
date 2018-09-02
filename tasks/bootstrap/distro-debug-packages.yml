@@ -19,8 +19,8 @@
 
               Network
               #######
-              default ipv4: {{ ansible_default_ipv4.address | default('<undefined>') }}
-              System Vendor: {{ ansible_system_vendor | default('<undefined>') }}
+              default ipv4: {{ ( ansible_default_ipv4 is defined and 'address' in ansible_default_ipv4) | ternary(ansible_default_ipv4.address, '<undefined>') }}
+              default ipv6: {{ ( ansible_default_ipv6 is defined and 'address' in ansible_default_ipv6) | ternary(ansible_default_ipv6.address, '<undefined>') }}
 
     - set_fact:
         debug_failed_service: "{{ hostvars[inventory_hostname]['ansible_failed_task']['args']['name'] }}"
