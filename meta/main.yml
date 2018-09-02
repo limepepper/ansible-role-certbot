@@ -15,10 +15,25 @@ galaxy_info:
   # min_ansible_container_version:
   # github_branch:
 
+  # https://galaxy.ansible.com/api/v1/platforms/?name=Fedora
+  # https://galaxy.ansible.com/api/v1/platforms/?page=2
   platforms:
     - name: Ubuntu
       versions:
         - xenial
+        - bionic
+    - name: Debian
+      versions:
+        # - jessie
+        - stretch
+        # - buster
+    - name: EL
+      versions:
+        - 6
+        - 7
+    - name: Fedora
+      versions:
+        - 28
 
   galaxy_tags:
     - web
@@ -28,5 +43,6 @@ galaxy_info:
     - letsencrypt
 
 dependencies: []
-  # - src: git+https://github.com/limepepper/ansible-role-apache.git
-  # - src: git+https://github.com/limepepper/ansible-role-mysql.git
+
+# - src: git+https://github.com/limepepper/ansible-role-apache.git
+# - src: git+https://github.com/limepepper/ansible-role-mysql.git

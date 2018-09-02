@@ -5,7 +5,15 @@ services: docker
 
 env:
   - distro: centos6
-    playbook: test.yml
+  - distro: centos7
+  - distro: ubuntu1604
+  - distro: ubuntu1804
+  - distro: debian9
+  - distro: fedora28
+    docker_profile: tomhodder
+
+install:
+  - gem install inspec
 
 script:
   # Download test shim.

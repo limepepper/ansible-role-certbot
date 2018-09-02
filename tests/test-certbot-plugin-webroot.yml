@@ -1,0 +1,152 @@
+---
+- hosts: all
+  become: yes
+
+  # if the distro doesn't ship with python
+  # this shims it in before fact gathering
+  gather_facts: false
+  pre_tasks:
+  - name: Install python2 for Ansible
+    raw: sh -c "test -e /usr/bin/python || ( ( test -e /usr/bin/apt && apt -qqy update && apt install -qqy python-minimal) || ( test -e /usr/bin/dnf && /usr/bin/dnf -qy install python) || ( test -e /usr/bin/yum && /usr/bin/yum -qy install python) )"
+    register: output
+    changed_when: 'output.stdout|trim() != ""'
+  - name: Gathering Facts
+    setup:
+    tags: always
+  # end of python shim
+
+  tasks:
+    - block:
+        - set_fact:
+            certbot_tests_staging: yes
+            certbot_test_zone: testing.limepepper.co.uk
+            certbot_test_site_dir: /var/www/testdomain
+          tags: always
+
+        - set_fact:
+            certbot_test_domain: "{{ ansible_hostname }}.{{ certbot_test_zone }}"
+            certbot_test_alternatives:
+              - "www.{{ ansible_hostname }}.{{ certbot_test_zone }}"
+          tags: always
+
+        - name: create digital ocean domain for testing
+          become: false
+          local_action:
+            module: digital_ocean_domain
+            state: present
+            name: "{{ certbot_test_zone }}"
+            ip: 127.0.0.1
+          register: testing_domain
+
+        - name: Create A record for test machine
+          become: false
+          local_action:
+            module: digital_ocean_domain_record
+            domain: "{{ certbot_test_zone }}"
+            name: "{{ ansible_hostname }}"
+            type: A
+            force_update: yes
+            data: "{{ ansible_default_ipv4.address }}"
+          tags: dozone
+
+        - name: Create A record for test machine alts
+          become: false
+          local_action:
+            module: digital_ocean_domain_record
+            domain: "{{ certbot_test_zone }}"
+            name: "www.{{ ansible_hostname }}"
+            type: A
+            force_update: yes
+            data: "{{ ansible_default_ipv4.address }}"
+          # with_items: "{{ certbot_test_alternatives }}"
+          tags: dozone
+
+        - include_role:
+            name: limepepper.apache
+          vars:
+            apache_vhosts:
+              - ServerName: "{{ certbot_test_domain }}"
+                ServerAliases: "{{ certbot_test_alternatives }}"
+                DocumentRoot: "{{ certbot_test_site_dir }}"
+                force_immediate_update: yes
+          tags: always
+
+        - name: create the test http home dir directory
+          file:
+            name: "{{ certbot_test_site_dir }}"
+            state: directory
+
+        - copy:
+            content: |
+              <html><body><h2>This is a test page YYY</h2></body></html>
+            dest: "{{ certbot_test_site_dir }}/index.html"
+
+        - name: import the certbot role
+          import_role:
+            name: '{{playbook_dir}}/..'
+
+        - certbot:
+            domain: "{{ certbot_test_domain }}"
+            alternatives: "{{ certbot_test_alternatives }}"
+            plugin: webroot
+            email: certbot-dev@limepepper.co.uk
+            document_root: /var/www/testdomain
+            staging: "{{ certbot_tests_staging }}"
+            # auto_renew_http: yes
+            force: no
+            # debug: yes
+          tags: docert
+
+        - include_role:
+            name: limepepper.apache
+          vars:
+            apache_vhosts_ssl:
+              - ServerName: "{{ certbot_test_domain }}"
+                ServerAliases: "{{ certbot_test_alternatives }}"
+                DocumentRoot: /var/www/testdomain
+                force_immediate_update: no
+                provider: letsencrypt
+          tags: always
+
+        - name: create the /var/cache/ansible/certbot dir
+          file:
+            name: /var/cache/ansible/certbot
+            state: directory
+
+        - name: Download foo.conf
+          get_url:
+            url: https://letsencrypt.org/certs/fakeleintermediatex1.pem
+            dest: /var/cache/ansible/certbot/fakeleintermediatex1.pem
+            mode: 0440
+
+        - name: Download foo.conf
+          get_url:
+            url: https://letsencrypt.org/certs/fakelerootx1.pem
+            dest: /var/cache/ansible/certbot/fakelerootx1.pem
+            mode: 0440
+
+      always:
+        - name: create the var cache directory
+          file:
+            name: "/var/cache/ansible/attributes"
+            state: directory
+          tags: always
+
+        - name: write out the hostvars to json for inspec testing
+          copy:
+            content: "{{ hostvars[inventory_hostname] | strip_fieldattributes | to_nice_json }}"
+            dest: "/var/cache/ansible/attributes/hostvars.json"
+          changed_when: false
+          tags: always
+
+      # the idea here, is that if any of the tasks fail, it will add useful
+      # troubleshooing tools to the build.
+      rescue:
+
+        - include_role:
+            name: '{{playbook_dir}}/..'
+            tasks_from: bootstrap/distro-debug-packages.yml
+          tags: always
+
+        - fail:
+            msg: "force a failure due to previous errors"

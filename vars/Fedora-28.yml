@@ -4,3 +4,5 @@ certbot_packages:
   - certbot
   - python3-certbot-dns-route53
   - python3-certbot-dns-digitalocean
+
+certbot_timer_servicename: certbot-renew

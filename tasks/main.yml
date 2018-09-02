@@ -4,17 +4,14 @@
   become: yes
   block:
 
-  - debug:
-      var: bootstrap_done
-
     # boilerplate
   - name: bootstrap enough that ansible can run most ansible modules
     include_tasks: "bootstrap/main.yml"
-    when: bootstrap_done is not defined
+    when: bootstrap_done is not defined or lookup('env', '_DTOOLS')
     tags: [ bootstrap ]
 
     # boilerplate
-  - include_tasks: bootstrap/distro-vars-import.yml
+  - include_tasks: bootstrap/distro-vars-import2.yml
     tags: always
 
     ## START OF MAIN TASKS SECTION ##
@@ -22,34 +19,4 @@
   - include_tasks: install/main.yml
     tags: always
 
-  # - name: process each of the domains
-  #   include_tasks: install/cert.yml
-  #   with_items: "{{ certbot_certs }}"
-  #   loop_control:
-  #     loop_var: cert
-  #   tags: always
-
- ## END OF MAIN TASKS SECTION ##
-
-  always:
-    - name: create the var cache directory
-      file:
-        name: "/var/cache/ansible/attributes"
-        state: directory
-      tags: always
-
-    - name: write out the hostvars to json for inspec testing
-      copy:
-        content: "{{ hostvars[inventory_hostname] | strip_fieldattributes | to_nice_json }}"
-        dest: "/var/cache/ansible/attributes/hostvars.json"
-      changed_when: false
-      tags: always
-
-  # boilerplate
-  # the idea here, is that if any of the tasks fail, it will add useful
-  # troubleshooing tools to the build.
-  rescue:
-  - include_tasks: bootstrap/distro-debug-packages.yml
-
-  - fail:
-      msg: "force a failure due to previous errors"
+    ## END OF MAIN TASKS SECTION ##

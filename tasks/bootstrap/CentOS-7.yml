@@ -9,7 +9,7 @@
       name:
       - epel-release
 
-  - name: install shim packages
+  - name: install shim packages (CentOS-7)
     yum:
       name:
       - libselinux-python
@@ -18,7 +18,8 @@
       - python-pip
       - unzip
       - git
-      - MySQL-python
+      # unlikely to be generally applicable, do in mysql instead
+      # - MySQL-python
       - net-tools
       - curl
 

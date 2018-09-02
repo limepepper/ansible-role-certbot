@@ -7,7 +7,7 @@ vars_json = json('/var/cache/ansible/attributes/hostvars.json')
 
 vars = vars_json.params
 
-control 'check-attributes' do
+control 'check-attributes-1' do
   impact 0.6
   title "Check attribtues for node: #{vars['ansible_hostname']}"
   desc '      Checking the hostvars cache is sensible  '
@@ -28,8 +28,14 @@ control 'check-certbot-01' do
   title "Check certbot for node: #{vars['ansible_hostname']}"
   desc '   Prevent unexpected settings.  '
 
-  describe file('/usr/bin/certbot') do
-    it { should be_file }
+  # describe file('/usr/bin/certbot') do
+  #   it { should be_file }
+  # end
+
+  describe file(vars['certbot_path']) do
+    it { should exist }
+    it { should be_allowed('execute') }
+    # it { should be_allowed('execute', by: 'root') }
   end
 
   describe command('certbot --help') do
@@ -46,6 +52,15 @@ control 'check-certbot-01' do
   describe command('certbot plugins') do
     its('stdout') { should match(/^\* dns-route53/) }
     its('exit_status') { should eq 0 }
+  end
+
+  describe command('certbot plugins') do
+    its('stdout') { should match(/^\* dns-digitalocean/) }
+    its('exit_status') { should eq 0 }
+  end
+
+  describe file('/etc/letsencrypt') do
+    it { should be_directory }
   end
 
   describe command('certbot plugins') do

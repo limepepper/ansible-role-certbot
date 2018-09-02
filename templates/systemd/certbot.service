@@ -1,0 +1,15 @@
+
+[Unit]
+Description=Certbot
+Documentation=file:///usr/share/doc/python-certbot-doc/html/index.html
+Documentation=https://letsencrypt.readthedocs.io/en/latest/
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/certbot renew --quiet --agree-tos {% if apache_service is defined %}--deploy-hook "systemctl reload {{ apache_service }}.service"{% endif %}
+PrivateTmp=true
+
+# reload server manually
+# --deploy-hook "systemctl reload nginx.service" to the ExecStart
+
+# {{ ansible_hostname }}

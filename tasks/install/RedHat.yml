@@ -4,7 +4,8 @@
   become: yes
   block:
 
-  - package:
+  - name: install distro specific certbot packages (os_family == RedHat)
+    package:
       name: "{{ certbot_packages }}"
 
   # - pip:
@@ -16,3 +17,8 @@
   #       # - certbot-vault
   #     executable: /usr/bin/pip3
 
+- name: Make sure {{ certbot_timer_servicename }} is running
+  systemd:
+    state: started
+    enabled: yes
+    name: "{{ certbot_timer_servicename }}.timer"

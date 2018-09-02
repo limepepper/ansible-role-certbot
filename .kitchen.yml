@@ -47,11 +47,11 @@ verifier:
   # format: json
   # output: reports/limepepper.foreman/%{platform}_%{suite}_inspec.json
   # format: progress
-  inspec_tests:
-    - tests/inspec/default
-  attributes:
-    skiplist:
-      - mysql-skip-this
+  # inspec_tests:
+  #   - tests/inspec/default
+  # attributes:
+  #   skiplist:
+  #     - mysql-skip-this
 
 suites:
   - name: default

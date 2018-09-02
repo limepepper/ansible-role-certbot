@@ -1,4 +1,5 @@
 ---
+
 - hosts: all
   become: yes
 
@@ -17,17 +18,33 @@
 
   tasks:
 
-    # - name: include any roles that are specified in the test-kitchen suite
-    #   include_role:
-    #     name: "{{ tk_dep_roles_item }}"
-    #   loop_control:
-    #     loop_var: tk_dep_roles_item
-    #   with_items: "{{ tk_dep_roles }}"
+    - block:
+        - name: import the role limepepper.wordpress in test.yml playbook
+          import_role:
+            name: '{{playbook_dir}}/..'
 
-    # - set_fact:
-    #     write_hosts_file: yes
-    #   tags: always
+      always:
+        - name: create the var cache directory
+          file:
+            name: "/var/cache/ansible/attributes"
+            state: directory
+          tags: always
 
-    - name: import the role limepepper.wordpress in test.yml playbook
-      import_role:
-        name: '{{playbook_dir}}/..'
+        - name: write out the hostvars to json for inspec testing
+          copy:
+            content: "{{ hostvars[inventory_hostname] | strip_fieldattributes | to_nice_json }}"
+            dest: "/var/cache/ansible/attributes/hostvars.json"
+          changed_when: false
+          tags: always
+
+      # the idea here, is that if any of the tasks fail, it will add useful
+      # troubleshooing tools to the build.
+      rescue:
+
+        - include_role:
+            name: '{{playbook_dir}}/..'
+            tasks_from: bootstrap/distro-debug-packages.yml
+          tags: always
+
+        - fail:
+            msg: "force a failure due to previous errors"

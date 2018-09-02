@@ -7,6 +7,12 @@ from ansible.module_utils.basic import *
 
 from ansible.module_utils._text import to_native
 
+from ansible.module_utils.CertBotDnsDigitalOcean import *
+from ansible.module_utils.CertBotDnsRoute53 import *
+from ansible.module_utils.CertBotWebroot import *
+from ansible.module_utils.CertBotWebrootRenewal import *
+
+
 def main():
     module = AnsibleModule(
         argument_spec={
@@ -18,58 +24,67 @@ def main():
           'plugin': {
                 'required': False,
                 'type': 'str',
-                'choices': ['none', 'dns-route53', 'digitalocean'],
+                'choices': [
+                    'none',
+                    'dns-route53',
+                    'dns-digitalocean',
+                    'webroot'],
                 'default': 'none'
                 },
           'email': { 'required': False, 'type': 'str' },
           'staging': { 'required': False, 'type': 'bool', 'default': False },
+          'debug': { 'required': False, 'type': 'bool', 'default': False },
+          'document_root': { 'required': False, 'type': 'str'},
+          'port': { 'required': False, 'type': 'str'},
+          'force': { 'required': False, 'type': 'bool', 'default': False },
+          'auto_renew': { 'required': False, 'type': 'bool', 'default': False },
+          'auto_renew_http': { 'required': False, 'type': 'bool', 'default': False },
+          'systemd_template': { 'required': False, 'type': 'str' },
         },
         supports_check_mode=False
     )
+
     domain = module.params["domain"]
-    email = module.params["email"]
+
+    #The request message was malformed :: Error finalizing order :: issuing precertificate: CN was longer than 64 bytes
+    #Please see the logfiles in /var/log/letsencrypt for more details.
+
+    if module.params["document_root"] and not os.path.isdir(module.params["document_root"]):
+        module.fail_json(msg="document_root was provided, but isn't a directory (doc_root: {0})".format(module.params["document_root"] ))
+
     alternatives = module.params["alternatives"]
     staging = module.params["staging"]
+    plugin = module.params["plugin"]
 
-    if not email:
-      email = "webmaster@{0}".format(domain)
+    if not module.params["email"]:
+      module.params["email"] = "webmaster@{0}".format(domain)
 
-    changed=False
-    msg=""
+    if plugin == 'dns-route53':
+      plugin = CertBotDnsRoute53(module)
 
-    certbot_cmd = """certbot certonly   \
-                --dns-route53   \
-                --dns-route53-propagation-seconds 10 \
-                --noninteractive  \
-                --agree-tos  \
-                --email {0}  \
-                --expand \
-                --allow-subset-of-names \
-                -d {1} """.format(email, domain)
+    elif plugin == 'dns-digitalocean':
+      plugin = CertBotDnsDigitalOcean(module)
 
-    if staging:
-      certbot_cmd = certbot_cmd + " --staging "
+    elif plugin == 'webroot':
+      plugin = CertBotWebroot(module)
 
-    buffstr = ""
-    for i in range(len(alternatives)):
-      certbot_cmd = certbot_cmd + " -d {0} ".format(alternatives[i])
+    resp = plugin.generate()
 
-    result, stdout, stderr = module.run_command(certbot_cmd)
+    if not resp or resp['result'] != 0:
+      module.warn("returning in error here")
+      module.fail_json(**resp)
 
-    if 'Certificate not yet due for renewal; no action taken.' in stdout:
-      changed=False
-      msg='Certificate not yet due for renewal; no action taken.'
-      # stdout=None
-      # stderr=None
+    if module.params["auto_renew_http"]:
+      plugin_renew = CertBotWebrootRenewal(module)
+
+
+
+    if resp and resp['result'] == 0:
+      # module.warn("returning in exit here2")
+      module.exit_json(**resp)
     else:
-      changed=True
-
-    module.exit_json(   changed=changed,
-                        rc=result,
-                        stdout=stdout,
-                        msg=msg,
-                        stderr=stderr,
-                        cmd=certbot_cmd)
+      module.warn("returning in error here - failing")
+      module.fail_json(**resp)
 
 if __name__ == '__main__':
     main()
