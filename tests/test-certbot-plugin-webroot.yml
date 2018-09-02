@@ -17,7 +17,6 @@
 
   tasks:
     - block:
-
         - set_fact:
             certbot_tests_staging: yes
             certbot_test_zone: testing.limepepper.co.uk
@@ -126,16 +125,28 @@
             dest: /var/cache/ansible/certbot/fakelerootx1.pem
             mode: 0440
 
-      # always:
-      #   - name: create the var cache directory
-      #     file:
-      #       name: "/var/cache/ansible/attributes"
-      #       state: directory
-      #     tags: always
-      #
-      #   - name: write out the hostvars to json for inspec testing
-      #     copy:
-      #       content: "{{ hostvars[inventory_hostname] | strip_fieldattributes | to_nice_json }}"
-      #       dest: "/var/cache/ansible/attributes/hostvars.json"
-      #     changed_when: false
-      #     tags: always
+      always:
+        - name: create the var cache directory
+          file:
+            name: "/var/cache/ansible/attributes"
+            state: directory
+          tags: always
+
+        - name: write out the hostvars to json for inspec testing
+          copy:
+            content: "{{ hostvars[inventory_hostname] | strip_fieldattributes | to_nice_json }}"
+            dest: "/var/cache/ansible/attributes/hostvars.json"
+          changed_when: false
+          tags: always
+
+      # the idea here, is that if any of the tasks fail, it will add useful
+      # troubleshooing tools to the build.
+      rescue:
+
+        - include_role:
+            name: '{{playbook_dir}}/..'
+            tasks_from: bootstrap/distro-debug-packages.yml
+          tags: always
+
+        - fail:
+            msg: "force a failure due to previous errors"

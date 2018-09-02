@@ -16,3 +16,9 @@
   #       - certbot-dns-route53
   #       # - certbot-vault
   #     executable: /usr/bin/pip3
+
+- name: Make sure {{ certbot_timer_servicename }} is running
+  systemd:
+    state: started
+    enabled: yes
+    name: "{{ certbot_timer_servicename }}.timer"

@@ -1,0 +1,10 @@
+---
+Bundler/DuplicatedGem:
+  Exclude:
+    - 'Gemfile'
+Style/GlobalVars:
+  Exclude:
+    - '.vagrant/vagrant.rb'
+Style/SafeNavigation:
+  Exclude:
+    - 'tests/inspect/*'

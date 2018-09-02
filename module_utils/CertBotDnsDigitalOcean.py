@@ -30,7 +30,7 @@ class CertBotDnsDigitalOcean():
 
     credsfile = "digoc_creds.ini"
     basedir = tempfile.mkdtemp()
-    self.module.warn("dir name {0}".format(basedir))
+    # self.module.warn("dir name {0}".format(basedir))
     tmpfile =   os.path.join(basedir, credsfile)
 
     try:
@@ -41,7 +41,7 @@ class CertBotDnsDigitalOcean():
         f.write(tokenstr)
         f.close()
 
-        self.module.warn("{0}".format(tokenstr))
+        # self.module.warn("{0}".format(tokenstr))
 
         if _p['debug']:
           certbot_cmd = "echo certbot certonly   \
@@ -68,7 +68,7 @@ class CertBotDnsDigitalOcean():
         for i in range(len(alts)):
           certbot_cmd = certbot_cmd + " -d {0} ".format(alts[i])
 
-        self.module.warn("{0}".format(certbot_cmd))
+        # self.module.warn("{0}".format(certbot_cmd))
 
         result, stdout, stderr = self.module.run_command(certbot_cmd)
 
