@@ -5,15 +5,8 @@
 
   - package:
       name:
-        # - certbot
         - python34
         - python34-setuptools
-        # - python3-certbot-apache
-        # - python-certbot-apache
-        # - python3-certbot
-        # - python3-zope.component
-        # - python3-zope.interface
-        # - python3-zope.hookable
 
   - name: configure pip3
     shell:
@@ -38,6 +31,11 @@
       owner: root
       group: root
       mode: 0700
+
+  - name: create the /etc/cron.d dir
+    file:
+      name: /etc/cron.d
+      state: directory
 
   - name: on centos, so copy in the cron job
     template:
