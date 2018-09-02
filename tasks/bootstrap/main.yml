@@ -6,7 +6,7 @@
 
   - debug:
       msg: |
-        Hostname: {{ ansible_hostname }}
+        Hostname: {{ ansible_hostname }}    ansible version: {{ ansible_version }}
         Fqdn: {{ ansible_fqdn }}
         Inventory Hostname {{ inventory_hostname }}
 
