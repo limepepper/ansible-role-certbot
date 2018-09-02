@@ -33,19 +33,19 @@
           import_role:
             name: '{{playbook_dir}}/..'
 
-        - certbot:
+        - name: generate cert using digital ocean DNS plugin
+          certbot:
             domain: "{{ certbot_test_domain }}"
             alternatives: "{{ certbot_test_alternatives }}"
             email: certbot-dev@limepepper.co.uk
             plugin: dns-digitalocean
             staging: "{{ certbot_tests_staging }}"
             # debug: yes
-            force: yes
+            # force: yes
           environment:
             DIGITALOCEAN_ACCESS_TOKEN: "{{ lookup('env','DIGITALOCEAN_ACCESS_TOKEN') }}"
           tags: always
 
-      # for the purposes of testing and debugging, write out the hostvars json
       always:
         - name: create the var cache directory
           file:
@@ -59,3 +59,15 @@
             dest: "/var/cache/ansible/attributes/hostvars.json"
           changed_when: false
           tags: always
+
+      # the idea here, is that if any of the tasks fail, it will add useful
+      # troubleshooing tools to the build.
+      rescue:
+
+        - include_role:
+            name: '{{playbook_dir}}/..'
+            tasks_from: bootstrap/distro-debug-packages.yml
+          tags: always
+
+        - fail:
+            msg: "force a failure due to previous errors"

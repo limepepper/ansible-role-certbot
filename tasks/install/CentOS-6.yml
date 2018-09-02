@@ -31,3 +31,19 @@
         # - certbot-vault
       executable: /usr/bin/pip3
 
+  - name: script to list out cron jobs for all users, useful for testing
+    template:
+      src: cron/cron-report.sh
+      dest: /var/cache/ansible/certbot/cron-report.sh
+      owner: root
+      group: root
+      mode: 0700
+
+  - name: on centos, so copy in the cron job
+    template:
+      src: cron/Linux.j2
+      dest: /etc/cron.d/certbot
+      owner: root
+      group: root
+      mode: 0640
+

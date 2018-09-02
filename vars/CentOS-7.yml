@@ -5,3 +5,5 @@ certbot_packages:
   - python2-certbot-dns-route53
   - python2-certbot-dns-digitalocean
   - python2-certbot-dns-ovh
+
+certbot_timer_servicename: certbot-renew

@@ -1,0 +1,7 @@
+---
+
+certbot_packages: []
+
+certbot_timer_servicename: certbot
+
+certbot_path: /usr/bin/certbot

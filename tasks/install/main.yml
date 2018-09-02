@@ -4,7 +4,7 @@
   become: yes
   block:
 
-  - name: call the distro specific tasks for letsencrypt
+  - name: "distro specific tasks certbot installer {{ ansible_distribution }}-{{ ansible_distribution_version }}"
     include_tasks: "{{ include_letsencrypt_tasks }}"
     with_first_found:
     - files:
