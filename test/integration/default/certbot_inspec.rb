@@ -32,6 +32,12 @@ control 'check-certbot-01' do
   #   it { should be_file }
   # end
 
+  describe file(vars['certbot_path']) do
+    it { should exist }
+    it { should be_allowed('execute') }
+    # it { should be_allowed('execute', by: 'root') }
+  end
+
   describe command('certbot --help') do
     its('stdout') { should match(/Certbot can obtain and install HTTPS\/TLS\/SSL certificates/) }
     its('exit_status') { should eq 0 }

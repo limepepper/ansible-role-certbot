@@ -80,10 +80,10 @@ def main():
 
 
     if resp and resp['result'] == 0:
-      module.warn("returning in exit here2")
+      # module.warn("returning in exit here2")
       module.exit_json(**resp)
     else:
-      module.warn("returning in error here3")
+      module.warn("returning in error here - failing")
       module.fail_json(**resp)
 
 if __name__ == '__main__':

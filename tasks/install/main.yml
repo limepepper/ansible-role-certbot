@@ -4,7 +4,12 @@
   become: yes
   block:
 
-  - name: call the distro specific tasks for letsencrypt
+  - name: create the /var/cache/ansible/certbot dir
+    file:
+      name: /var/cache/ansible/certbot
+      state: directory
+
+  - name: "distro specific tasks certbot installer {{ ansible_distribution }}-{{ ansible_distribution_version }}"
     include_tasks: "{{ include_letsencrypt_tasks }}"
     with_first_found:
     - files:

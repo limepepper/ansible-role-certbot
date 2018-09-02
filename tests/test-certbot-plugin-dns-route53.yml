@@ -58,3 +58,15 @@
             dest: "/var/cache/ansible/attributes/hostvars.json"
           changed_when: false
           tags: always
+
+      # the idea here, is that if any of the tasks fail, it will add useful
+      # troubleshooing tools to the build.
+      rescue:
+
+        - include_role:
+            name: '{{playbook_dir}}/..'
+            tasks_from: bootstrap/distro-debug-packages.yml
+          tags: always
+
+        - fail:
+            msg: "force a failure due to previous errors"
