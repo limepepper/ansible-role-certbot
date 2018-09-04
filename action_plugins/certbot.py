@@ -6,13 +6,15 @@ __metaclass__ = type
 from ansible import constants as C
 from ansible.plugins.action import ActionBase
 from ansible.utils.vars import merge_hash
-from ansible.module_utils._text import to_bytes, to_native, to_text
+from ansible.module_utils._text import to_bytes, to_text
 from ansible.module_utils.basic import FILE_COMMON_ARGUMENTS
 
+from ansible.plugins.action.copy import REAL_FILE_ARGS, _create_remote_file_args
 
-from ansible.plugins.action.template import ActionModule as _ActionModule
 
-import pprint
+# from ansible.plugins.action.template import ActionModule as _ActionModule
+
+# import pprint
 import os
 import os.path
 import tempfile
@@ -99,15 +101,15 @@ class ActionModule(ActionBase):
 # Supplement the FILE_COMMON_ARGUMENTS with arguments that are specific to file
 # FILE_COMMON_ARGUMENTS contains things that are not arguments of file
 # so remove those as well
-REAL_FILE_ARGS = frozenset(FILE_COMMON_ARGUMENTS.keys()).union(
-                          ('state', 'path', '_original_basename',
-                           'recurse', 'force',
-                           '_diff_peek', 'src')).difference(
-                          ('content', 'decrypt', 'backup', 'remote_src',
-                           'regexp', 'delimiter',
-                           'directory_mode', 'unsafe_writes'))
+# REAL_FILE_ARGS = frozenset(FILE_COMMON_ARGUMENTS.keys()).union(
+#                           ('state', 'path', '_original_basename',
+#                            'recurse', 'force',
+#                            '_diff_peek', 'src')).difference(
+#                           ('content', 'decrypt', 'backup', 'remote_src',
+#                            'regexp', 'delimiter',
+#                            'directory_mode', 'unsafe_writes'))
 
 
-def _create_remote_file_args(module_args):
-    """remove keys that are not relevant to file"""
-    return dict((k, v) for k, v in module_args.items() if k in REAL_FILE_ARGS)
+# def _create_remote_file_args(module_args):
+#     """remove keys that are not relevant to file"""
+#     return dict((k, v) for k, v in module_args.items() if k in REAL_FILE_ARGS)

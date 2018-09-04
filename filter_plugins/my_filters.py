@@ -3,11 +3,12 @@
 
 __author__ = 'testy mctestface'
 
+from ansible.errors import AnsibleError
+
 import re
 import os.path
 from six import string_types
 import datetime
-import collections
 from urlparse import urlparse
 
 # http://www.dasblinkenlichten.com/creating-ansible-filter-plugins/
@@ -41,7 +42,7 @@ class FilterModule(object):
                 re.search('[A-Z]', a_variable) and
                 re.search('[^0-9a-zA-Z]', a_variable)):
 
-            #print("found PUNC AND UPPER AND LOWER AND DIGIT")
+            # print("found PUNC AND UPPER AND LOWER AND DIGIT")
             return "found PUNC AND UPPER AND LOWER AND DIGIT"
         else:
             return "bad string was {}".format(a_variable)
@@ -58,7 +59,7 @@ class FilterModule(object):
                                             {'path': os.path.join(prepath, path['path'])}))
                 elif isinstance(path, str):
                     tmps.append({'path': os.path.join(prepath, path)})
-            except AttributeError, e:
+            except AttributeError as e:
                 print(e.args)
                 print(repr(e))
                 tmps.append({'error': e.args})
@@ -157,7 +158,7 @@ def filename(filename=''):
 def remove_reserved(user_roles={}):
     not_reserved = []
     for user_role, details in user_roles.items():
-        if not "metadata" in details or not "_reserved" in details["metadata"] or not details["metadata"]["_reserved"]:
+        if "metadata" not in details or "_reserved" not in details["metadata"] or not details["metadata"]["_reserved"]:
             not_reserved.append(user_role)
     return not_reserved
 
@@ -175,7 +176,7 @@ def create_sitename(sites=[]):
     for site in sites:
         try:
             len(site['site'])
-        except AttributeError, e:
+        except AttributeError as e:
             print('Failed: ' + str(e))
         if site['site'] and len(site['site']) > 5:
             site['site2222'] = "trtrg"
@@ -212,7 +213,7 @@ def strip_fieldattributes(obj=""):
 
         return tmp
 
-    #str(type(MyClassicClass)) == "<type 'classobj'>"
+    # str(type(MyClassicClass)) == "<type 'classobj'>"
 
     elif str(type(obj)) == "<class 'ansible.playbook.attribute.FieldAttribute'>":
         return "field attribute unserializable"

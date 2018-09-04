@@ -7,11 +7,12 @@ from ansible.module_utils.basic import *
 
 from ansible.module_utils._text import to_native
 
-from ansible.module_utils.CertBotDnsDigitalOcean import *
-from ansible.module_utils.CertBotDnsRoute53 import *
-from ansible.module_utils.CertBotWebroot import *
-from ansible.module_utils.CertBotWebrootRenewal import *
+from ansible.module_utils.CertBotDnsDigitalOcean import CertBotDnsDigitalOcean
+from ansible.module_utils.CertBotDnsRoute53 import CertBotDnsRoute53
+from ansible.module_utils.CertBotWebroot import CertBotWebroot
+from ansible.module_utils.CertBotWebrootRenewal import CertBotWebrootRenewal
 
+import os
 
 def main():
     module = AnsibleModule(
@@ -53,8 +54,8 @@ def main():
         module.fail_json(msg="document_root was provided, but isn't a directory (doc_root: {0})".format(
             module.params["document_root"]))
 
-    alternatives = module.params["alternatives"]
-    staging = module.params["staging"]
+    # alternatives = module.params["alternatives"]
+    # staging = module.params["staging"]
     plugin = module.params["plugin"]
 
     if not module.params["email"]:
