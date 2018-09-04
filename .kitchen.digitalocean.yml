@@ -31,32 +31,37 @@ verifier:
   attributes:
     skiplist:
       - renew-cron-1
-  format: cli
+  # format: cli
+  format: documentation
+  # format: json-rspec
+  # format: json
+  # output: reports/limepepper.foreman/%{platform}_%{suite}_inspec.json
+  # format: progress
 
 suites:
   - name: default
-    #   tk_dep_roles:
-    #     - limepepper.mysql
-    #     - limepepper.apache
-  - name: plugin-dns-digitalocean
+  #   tk_dep_roles:
+  #     - limepepper.mysql
+  #     - limepepper.apache
+  - name: dns-do
     provisioner:
-      playbook: tests/test-certbot-plugin-dns-digitalocean.yml
+      playbook: tests/dns-digitalocean.yml
     verifier:
       inspec_tests:
         - test/integration/default
         - test/integration/certchecks
         # - test/integration/plugin-dns-digitalocean
-  - name: plugin-dns-route53
+  - name: dns-r53
     provisioner:
-      playbook: tests/test-certbot-plugin-dns-route53.yml
+      playbook: tests/dns-route53.yml
     verifier:
       inspec_tests:
         - test/integration/default
         - test/integration/certchecks
         # - tests/inspec/certbot-plugin-dns-digitalocean
-  - name: plugin-webroot
+  - name: webroot
     provisioner:
-      playbook: tests/test-certbot-plugin-webroot.yml
+      playbook: tests/webroot.yml
     verifier:
       inspec_tests:
         - test/integration/default

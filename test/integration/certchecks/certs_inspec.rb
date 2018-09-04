@@ -19,7 +19,7 @@ control 'check-certbot-generated-certificate-01' do
   # end
 
   describe command('certbot --help') do
-    its('stdout') { should match(/Certbot can obtain and install HTTPS\/TLS\/SSL certificates/) }
+    its('stdout') { should match(%r{Certbot can obtain and install HTTPS\/TLS\/SSL certificates}) }
     its('exit_status') { should eq 0 }
   end
 
@@ -63,7 +63,7 @@ control 'check-certbot-generated-certificate-01' do
   else
     describe command("echo | openssl x509 -in /etc/letsencrypt/live/#{vars['certbot_test_domain']}/cert.pem  | openssl x509 -noout -issuer") do
       its('stdout') { should match(/^issuer/) }
-      its('stdout') { should match(/C=US\/O=Let's Encrypt\/CN=Let's Encrypt Authority X3$/) }
+      its('stdout') { should match(%r{C=US\/O=Let's Encrypt\/CN=Let's Encrypt Authority X3$}) }
       its('exit_status') { should eq 0 }
     end
   end

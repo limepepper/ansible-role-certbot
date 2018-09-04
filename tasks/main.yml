@@ -4,7 +4,7 @@
   become: yes
   block:
 
-    # boilerplate
+  # boilerplate
   - name: bootstrap enough that ansible can run most ansible modules
     include_tasks: "bootstrap/main.yml"
     when: bootstrap_done is not defined or lookup('env', '_DTOOLS')

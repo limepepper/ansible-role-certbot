@@ -1,3 +1,4 @@
+---
 
 - tags: [ always ]
   become: True
@@ -16,7 +17,6 @@
   #   loop_control:
   #     loop_var: distro_specific_vars
   #   #when: (role_path + 'vars/' + distro_specific_vars)|is_file
-
 
   - name: "gather distro vars 2"
     include_vars: "{{ distro_specific_vars }}"
@@ -47,4 +47,3 @@
       logfiles: |
         {{ logfiles|default({})|combine( hostvars[inventory_hostname][role_path| basename|replace('limepepper_','limepepper.')]['logfiles']|default({}) ) }}
     when: "(role_path| basename) in hostvars[inventory_hostname]"
-

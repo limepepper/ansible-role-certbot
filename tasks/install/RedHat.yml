@@ -8,14 +8,14 @@
     package:
       name: "{{ certbot_packages }}"
 
-  # - pip:
-  #     name:
-  #       - certbot
-  #       - certbot-dns-digitalocean
-  #       - certbot-dns-ovh
-  #       - certbot-dns-route53
-  #       # - certbot-vault
-  #     executable: /usr/bin/pip3
+# - pip:
+#     name:
+#       - certbot
+#       - certbot-dns-digitalocean
+#       - certbot-dns-ovh
+#       - certbot-dns-route53
+#       # - certbot-vault
+#     executable: /usr/bin/pip3
 
 - name: Make sure {{ certbot_timer_servicename }} is running
   systemd:

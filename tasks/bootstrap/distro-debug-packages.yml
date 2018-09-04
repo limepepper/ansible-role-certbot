@@ -1,28 +1,8 @@
 ---
 
-- tags: [ debugging ]
+- tags: [ always ]
   become: yes
   block:
-
-    - name: Show debugging infos
-      debug:
-        msg: |
-              Hostname: {{ ansible_hostname }}    ansible version: {{ ansible_version }}
-              Fqdn: {{ ansible_fqdn }}
-              Inventory Hostname {{ inventory_hostname }}
-
-              Distribution is {{ ansible_distribution }}-{{ ansible_distribution_major_version }}
-              Specific version is {{ ansible_distribution_version }}
-              OS family is {{ ansible_os_family }}
-              Release: {{ ansible_distribution_release }}
-              Ansible python version: {{ ansible_python_version }}
-
-              Network
-              #######
-
-              default ipv4: {% if ansible_default_ipv4 is defined and 'address' in ansible_default_ipv4 %}{{ ansible_default_ipv4.address }}{% else %}<undefined>{% endif %}
-
-              default ipv6: {% if ansible_default_ipv6 is defined and 'address' in ansible_default_ipv6 %}{{ ansible_default_ipv6.address }}{% else %}<undefined>{% endif %}
 
     - name: if the failed task was service-like, store its name
       set_fact:
@@ -31,7 +11,7 @@
         - '"ansible_failed_task" in hostvars[inventory_hostname]'
         - hostvars[inventory_hostname]['ansible_failed_task']['action'] in ['service','systemd','upstart']
 
-    - name: attempt to determine issue with service under systemd
+    - name: 'attempt to determine issue with service under systemd'
       shell: "systemctl status {{ debug_failed_service }} -l ; true"
       when:
         - 'ansible_service_mgr == "systemd"'
@@ -51,7 +31,7 @@
       register: p
 
     - tags: [ debug ]
-      when: p.stat.isdir is not defined
+      when: (p.stat.isdir is not defined) or lookup('env', '_DTOOLS')
       block:
 
         - debug:
@@ -60,19 +40,20 @@
         - name: "gather distro vars ({{ ansible_distribution }})"
           include_tasks: "{{ distro_specific_tools }}"
           with_first_found:
-          - files:
-            - "debugging/{{ ansible_distribution }}-{{ ansible_distribution_version }}.yml"
-            - "debugging/{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
-            - "debugging/{{ ansible_distribution }}.yml"
-            - "debugging/{{ ansible_os_family }}.yml"
-            - "debugging/{{ ansible_system }}.yml"
-            - "debugging/default.yml"
-            skip: true
+            - files:
+                - "debugging/{{ ansible_distribution }}-{{ ansible_distribution_version }}.yml"
+                - "debugging/{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+                - "debugging/{{ ansible_distribution }}.yml"
+                - "debugging/{{ ansible_os_family }}.yml"
+                - "debugging/{{ ansible_system }}.yml"
+                - "debugging/default.yml"
+              skip: true
           loop_control:
             loop_var: distro_specific_tools
-          # tags: [ always ]
+          tags: [ always ]
 
-        - copy:
+        - name: write out the stripconfig bash snippet
+          copy:
             content: |
               #!/bin/bash
 
@@ -86,6 +67,29 @@
             group: root
             mode: 0775
 
-        - file:
+        - name: write out a directory which alsa serves as a done flag
+          file:
             name: /var/cache/ansible/debug
             state: directory
+
+
+    - name: "Show debugging info for failed node {{ inventory_hostname }}"
+      debug:
+        msg: |
+              Hostname: {{ ansible_hostname }}
+              ansible version: {{ ansible_version.major }}.{{ ansible_version.minor }}.{{ ansible_version.revision }}
+              Fqdn: {{ ansible_fqdn }}
+              Inventory Hostname {{ inventory_hostname }}
+
+              Distribution is {{ ansible_distribution }}-{{ ansible_distribution_major_version }}
+              Specific version is {{ ansible_distribution_version }}
+              OS family is {{ ansible_os_family }}
+              Release: {{ ansible_distribution_release }}
+              Ansible python version: {{ ansible_python_version }}
+
+              Network
+              #######
+
+              default ipv4: {% if ansible_default_ipv4 is defined and 'address' in ansible_default_ipv4 %}{{ ansible_default_ipv4.address }}{% else %}<undefined>{% endif %}
+
+              default ipv6: {% if ansible_default_ipv6 is defined and 'address' in ansible_default_ipv6 %}{{ ansible_default_ipv6.address }}{% else %}<undefined>{% endif %}

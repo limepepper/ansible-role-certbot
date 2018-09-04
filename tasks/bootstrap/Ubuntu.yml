@@ -7,7 +7,7 @@
   - debug:
       msg: "using the Ubuntu boot strapper (Ubuntu-generic)"
 
-  - name: install shim packages
+  - name: "install shim packages for {{ ansible_distribution }}"
     apt:
       update_cache: yes
       cache_valid_time: 3600
@@ -18,3 +18,4 @@
         - unzip
         - git
         - curl
+        - python-setuptools

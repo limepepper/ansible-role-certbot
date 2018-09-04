@@ -35,7 +35,7 @@ control 'check-certbot-01' do
   end
 
   describe command('certbot --help') do
-    its('stdout') { should match(/Certbot can obtain and install HTTPS\/TLS\/SSL certificates/) }
+    its('stdout') { should match(%r{Certbot can obtain and install HTTPS\/TLS\/SSL certificates}) }
     its('exit_status') { should eq 0 }
   end
 

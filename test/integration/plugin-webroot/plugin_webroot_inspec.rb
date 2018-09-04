@@ -19,7 +19,7 @@ control 'check-plugin-webroot-01' do
   # end
 
   describe command('certbot --help') do
-    its('stdout') { should match(/Certbot can obtain and install HTTPS\/TLS\/SSL certificates/) }
+    its('stdout') { should match(%r{Certbot can obtain and install HTTPS\/TLS\/SSL certificates}) }
     its('exit_status') { should eq 0 }
   end
 
@@ -32,25 +32,25 @@ control 'check-plugin-webroot-01' do
     # its('protocols') { should_not include 'ssl2' }
   end
 
-  # should be_in
-
   describe ssl(port: 443).protocols('ssl2') do
     proc_desc = 'on node ==target_hostname} runn)'
     it(proc_desc) { should_not be_enabled }
     it { should_not be_enabled }
   end
 
-  # describe ssl(port: 443).ciphers(/rc4/i) do
-  #   # it(proc_desc) { should_not be_enabled }
-  #   #its('protocols') { should eq 'ssl2' }
-  #   it { should_not be_enabled }
-  # end
-
-  # describe ssl(port: 443) do
-  #   # it(proc_desc) { should_not be_enabled }
-  #   its('ciphers') { should eq '/rc4/i' }
-  #   #its('protocols') { should eq 'ssl2' }
-  # end
+  if vars.key? 'certbot_tests_staging'
+    describe command("echo | openssl x509 -in /etc/letsencrypt/live/#{vars['certbot_test_domain']}/cert.pem  | openssl x509 -noout -issuer") do
+      its('stdout') { should match(/^issuer/) }
+      its('stdout') { should match(/Fake LE Intermediate X1$/) }
+      its('exit_status') { should eq 0 }
+    end
+  else
+    describe command("echo | openssl x509 -in /etc/letsencrypt/live/#{vars['certbot_test_domain']}/cert.pem  | openssl x509 -noout -issuer") do
+      its('stdout') { should match(/^issuer/) }
+      its('stdout') { should match(%r{C=US\/O=Let's Encrypt\/CN=Let's Encrypt Authority X3$}) }
+      its('exit_status') { should eq 0 }
+    end
+  end
 end
 
 #                           _            _            _
@@ -71,13 +71,13 @@ control 'check-plugin-webroot-apache-1' do
     it { should be_running }
   end
 
-  url = "https://#{vars['certbot_test_domain']}/index.html"
+  url = "https://#{vars['certbot_test_domain']}/index.htm"
 
   describe http(url, ssl_verify: false) do
     its('status') { should eq 200 }
     its('body') { should match(/This is a test page YYY/) }
     # its('headers.name') { should eq 'header' }
-    its('headers.Content-Type') { should match(/text\/html/) }
+    its('headers.Content-Type') { should match(%r{text\/html}) }
   end
 
   # | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p'
@@ -88,16 +88,24 @@ control 'check-plugin-webroot-apache-1' do
     its('exit_status') { should eq 0 }
   end
 
-  # describe command("echo | openssl s_client -servername #{vars['certbot_test_domain']} -connect #{vars['certbot_test_domain']}:443 2>/dev/null | openssl x509 -noout -dates") do
-  #   its('stdout') { should match(/^notBefore/) }
-  #   its('stdout') { should match(/^notAfter/) }
-  #   its('exit_status') { should eq 0 }
-  # end
-
   describe command("echo | openssl s_client -servername #{vars['certbot_test_domain']} -connect #{vars['certbot_test_domain']}:443 2>/dev/null | openssl x509 -noout -startdate") do
     its('stdout') { should match(/^notBefore/) }
     # its('stdout') { should match(/^notAfter/) }
     its('exit_status') { should eq 0 }
+  end
+
+  if vars.key? 'certbot_tests_staging'
+    describe command("echo | openssl s_client -servername #{vars['certbot_test_domain']} -connect #{vars['certbot_test_domain']}:443 2>/dev/null | openssl x509 -noout -issuer") do
+      its('stdout') { should match(/^issuer/) }
+      its('stdout') { should match(/Fake LE Intermediate X1$/) }
+      its('exit_status') { should eq 0 }
+    end
+  else
+    describe command("echo | openssl s_client -servername #{vars['certbot_test_domain']} -connect #{vars['certbot_test_domain']}:443 2>/dev/null | openssl x509 -noout  -issuer") do
+      its('stdout') { should match(/^issuer/) }
+      its('stdout') { should match(%r{C=US\/O=Let's Encrypt\/CN=Let's Encrypt Authority X3$}) }
+      its('exit_status') { should eq 0 }
+    end
   end
 
   # https://www.openssl.org/docs/manmaster/man1/x509.html
@@ -107,14 +115,6 @@ control 'check-plugin-webroot-apache-1' do
     its('stdout') { should match(/^notAfter/) }
     its('exit_status') { should eq 0 }
   end
-
-  # describe apache do
-  #   its('user') { should eq vars['apache_user'] }
-  # end
-
-  # describe package('php') do
-  #   it { should_not be_installed }
-  # end
 
   describe port(80) do
     it { should be_listening }

@@ -8,3 +8,9 @@ Style/GlobalVars:
 Style/SafeNavigation:
   Exclude:
     - 'tests/inspect/*'
+Metrics/LineLength:
+  Exclude:
+    - 'test/integration/**/*'
+Metrics/BlockLength:
+  Exclude:
+    - 'test/integration/**/*'

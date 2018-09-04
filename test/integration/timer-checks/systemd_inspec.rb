@@ -15,6 +15,24 @@ control 'renew-systemd-timer-1' do
   impact 0.6
   title "Check certbot systemd timer for #{vars['ansible_hostname']}"
   desc '  If certbot is on a system with systemd, check its timer wsa enabled '
+
+  # describe systemd_service("#{vars['certbot_timer_servicename']}.timer") do
+  #   it { should be_installed }
+  #   it { should be_enabled }
+  #   it { should be_running }
+  # end
+
+  # describe command('systemctl list-timers --all') do
+  #   its('stdout') { should match(/certbot/) }
+  #   its('exit_status') { should eq 0 }
+  # end
+
+  # describe command(
+  #        "systemctl status #{vars['certbot_timer_servicename']}.timer -l") do
+  #   its('stdout') { should match(/Loaded\: loaded/) }
+  #   its('stdout') { should match(/Active\: active/) }
+  #   its('exit_status') { should eq 0 }
+  # end
 end
 
 control 'renew-cron-1' do
