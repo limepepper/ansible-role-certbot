@@ -7,7 +7,7 @@ from ansible import constants as C
 from ansible.plugins.action import ActionBase
 from ansible.utils.vars import merge_hash
 from ansible.module_utils._text import to_bytes, to_text
-from ansible.module_utils.basic import FILE_COMMON_ARGUMENTS
+# from ansible.module_utils.basic import FILE_COMMON_ARGUMENTS
 
 from ansible.plugins.action.copy import REAL_FILE_ARGS, _create_remote_file_args
 

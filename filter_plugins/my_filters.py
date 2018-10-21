@@ -147,7 +147,7 @@ def extract_role_users(users={}, exclude_users=[]):
     for user, details in users.iteritems():
         if user not in exclude_users and "roles" in details:
             for role in details["roles"]:
-                role_users.append(role+":"+user)
+                role_users.append("%s:%s" % (role, user))
     return role_users
 
 
@@ -233,12 +233,12 @@ def strip_fieldattributes(obj=""):
 
 
 def buildCombo(reponame, platforms, suites):
-    tmp = []
-    for platform in platforms:
-        for suite in suites:
-            tmp.append("{0}_{1}_{2}".format(reponame, platform, suite))
+    combos = []
+    for suite in suites:
+        for platform in platforms:
+            combos.append("{0}_{1}_{2}".format(reponame, platform, suite))
 
-    return tmp
+    return combos
 
 
 def prepend_path(paths=[], prepath=''):

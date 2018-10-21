@@ -3,6 +3,7 @@ extends: default
 ignore: |
   .venv/
   .kitchen/
+  molecule/
 
 rules:
   braces:
@@ -19,3 +20,4 @@ rules:
   new-line-at-end-of-file: enable
   new-lines: {type: unix}
   truthy: disable
+  comments-indentation: disable

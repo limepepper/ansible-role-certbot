@@ -1,23 +1,26 @@
 ---
 
 - tags: [ bootstrap ]
-  become: True
+  become: true
   block:
 
-  - debug:
-      msg: "using the Ubuntu boot strapper"
+    - debug:
+        msg: "using the Ubuntu boot strapper"
 
-  - name: install shim packages
-    apt:
-      # update_cache: yes
-      install_recommends: no
-      name:
-        - python-pip
-        - unzip
-        - git
-        - curl
+    - name: install shim packages
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+        install_recommends: no
+        name:
+          - python-pip
+          - python-setuptools
+          - unzip
+          - git
+          - curl
+          - net-tools
 
-# - file:
-#     src: /run/systemd/resolve/resolv.conf
-#     dest: /etc/resolv.conf
-#     state: link
+    # - file:
+    #     src: /run/systemd/resolve/resolv.conf
+    #     dest: /etc/resolv.conf
+    #     state: link

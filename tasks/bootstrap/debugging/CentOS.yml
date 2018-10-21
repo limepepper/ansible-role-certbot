@@ -1,6 +1,6 @@
 ---
 
-- become: True
+- become: true
   block:
 
   - name: install a bunch of tools useful for debugging
@@ -22,8 +22,12 @@
         - procps
         - lsof
         - nmap
-        - jq
+        # - jq
         - inotify-tools
+        - file
+        - net-tools
+        - iproute
+        - atop
 
   # update the mlocate database in the background
   - name: update the mlocate database

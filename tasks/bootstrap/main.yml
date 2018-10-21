@@ -1,11 +1,5 @@
 ---
 
-- tags: [ always ]
-  when: lookup('env', '_DTOOLS')
-  block:
-
-    - include_tasks: distro-debug-packages.yml
-
 - tags: [ bootstrap ]
   when: bootstrap_done is not defined
   block:
@@ -20,9 +14,12 @@
           Distribution is      {{ ansible_distribution }}-{{ ansible_distribution_major_version }}
           Specific version is  {{ ansible_distribution_version }}
           OS family is         {{ ansible_os_family }}
-          Release:             {{ ansible_distribution_release }}
 
-          Python Version:      {{ ansible_python_version }}
+          Release:             {% if ansible_distribution_release is defined %}{{ ansible_distribution_release }}{% else %}<undefined>{% endif %}
+
+
+
+          Python Version:      {% if ansible_python_version is defined %}{{ ansible_python_version }}{% else %}<undefined>{% endif %}
 
           default ipv4:        {% if ansible_default_ipv4 is defined and 'address' in ansible_default_ipv4 %}{{ ansible_default_ipv4.address }}{% else %}<undefined>{% endif %}
 
@@ -58,3 +55,9 @@
       file:
         name: "/var/cache/ansible/bootstrap"
         state: directory
+
+- when: lookup('env', '_DTOOLS')
+  block:
+
+    - include_tasks: distro-debug-packages.yml
+      tags: [ always ]

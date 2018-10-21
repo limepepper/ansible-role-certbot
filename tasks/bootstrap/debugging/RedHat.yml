@@ -1,6 +1,6 @@
 ---
 
-- become: True
+- become: true
   block:
 
   - yum:

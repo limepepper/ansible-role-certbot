@@ -1,7 +1,7 @@
 ---
 
 - tags: main-run
-  become: True
+  become: true
   block:
 
   - name: install bootstrap shim packages
@@ -14,6 +14,8 @@
         - wget
         - curl
         - bind-utils
+        - net-tools
+        - file
 
   # update the mlocate database in the background
   - name: update the mlocate database

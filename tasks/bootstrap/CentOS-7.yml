@@ -1,7 +1,7 @@
 ---
 
 - tags: main-run
-  become: True
+  become: true
   block:
 
     - name: install epel
@@ -18,10 +18,9 @@
           - python-pip
           - unzip
           - git
-          # unlikely to be generally applicable, do in mysql instead
-          # - MySQL-python
           - net-tools
           - curl
+          - iproute
 
     - name: create the /var/log/journal for storing boot logs
       file:
@@ -36,4 +35,7 @@
         cmd: |
           systemd-tmpfiles --create --prefix /var/log/journal
           systemctl restart systemd-journald
-      when: journal_created.changed
+      when:
+        - journal_created.changed
+        - 'ansible_virtualization_type != "docker"'
+

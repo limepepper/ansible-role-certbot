@@ -16,6 +16,11 @@
       creates: /usr/bin/pip3
 
   - pip:
+      name: urllib3
+      version: 1.23
+      executable: /usr/bin/pip3
+
+  - pip:
       name:
         - certbot
         - certbot-dns-digitalocean
@@ -37,7 +42,7 @@
       name: /etc/cron.d
       state: directory
 
-  - name: on centos, so copy in the cron job
+  - name: on centos-6, so copy in the cron job
     template:
       src: cron/Linux.j2
       dest: /etc/cron.d/certbot

@@ -3,7 +3,9 @@
 - tags: [ always ]
   block:
 
-  - fail:
-      msg: not implemented
+    - debug:
+        msg: |
+          In the Windows bootstrapping task
 
-#  - win_chocolatey: name=pscx
+
+  #  - win_chocolatey: name=pscx

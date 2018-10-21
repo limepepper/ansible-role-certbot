@@ -3,7 +3,9 @@
 
 # this line must be written exactly that way,
 # as Ansible will replace it with the "imported" code
-from ansible.module_utils.basic import *
+# from ansible.module_utils.basic import *
+
+from ansible.module_utils.basic import AnsibleModule
 
 from ansible.module_utils._text import to_native
 
