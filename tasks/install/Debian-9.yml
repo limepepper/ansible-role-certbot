@@ -5,6 +5,11 @@
   block:
 
   - pip:
+      name: urllib3
+      version: 1.23
+      # executable: /usr/bin/pip3
+
+  - pip:
       name:
         - certbot
         - certbot-dns-digitalocean
