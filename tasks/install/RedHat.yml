@@ -4,9 +4,24 @@
   become: yes
   block:
 
-  - name: install distro specific certbot packages (os_family == RedHat)
-    package:
-      name: "{{ certbot_packages }}"
+    - name: install distro specific certbot packages (os_family == RedHat)
+      package:
+        name:
+          # - "{{ certbot_packages }}"
+          - certbot
+          # - python2-certbot-dns-route53
+          - python2-certbot-dns-digitalocean
+          - python2-certbot-dns-ovh
+
+    - pip:
+        name:
+          - certbot-dns-route53
+
+    - name: Make sure {{ certbot_timer_servicename }} is running
+      systemd:
+        state: started
+        enabled: yes
+        name: "{{ certbot_timer_servicename }}.timer"
 
 # - pip:
 #     name:
@@ -16,9 +31,3 @@
 #       - certbot-dns-route53
 #       # - certbot-vault
 #     executable: /usr/bin/pip3
-
-- name: Make sure {{ certbot_timer_servicename }} is running
-  systemd:
-    state: started
-    enabled: yes
-    name: "{{ certbot_timer_servicename }}.timer"
