@@ -1,0 +1,55 @@
+---
+
+- tags: [ letsencrypt, certbot ]
+  become: yes
+  block:
+
+    - debug:
+        msg: "ansible_distribution_version: {{ ansible_distribution_version }}"
+
+    - name: install distro specific certbot packages (os_family == RedHat)
+      package:
+        name:
+          - certbot
+          - python2-certbot-dns-digitalocean
+          - python2-certbot-dns-ovh
+          - python2-certbot-dns-route53
+        exclude:
+          - python2-s3transfer-0.1.10-1
+          - python-s3transfer
+
+    # - name: install distro specific certbot packages (os_family == RedHat)
+    #   package:
+    #     name:
+    #       - python34
+    #       - python34-pip
+
+    # - pip:
+    #     name:
+    #       - certbot
+    #       - certbot-dns-digitalocean
+    #       - certbot-dns-ovh
+    #       - certbot-dns-route53
+    #       # - certbot-vault
+    #     executable: /usr/bin/pip3
+
+    # - name: install distro specific certbot packages (os_family == RedHat)
+    #   package:
+    #     name:
+    #       # - "{{ certbot_packages }}"
+    #       - certbot
+    #       # - python2-certbot-dns-route53
+    #       - python2-certbot-dns-digitalocean
+    #       - python2-certbot-dns-ovh
+
+    # - pip:
+    #     name:
+    #       - certbot-dns-route53
+
+    - name: Make sure {{ certbot_timer_servicename }} is running
+      systemd:
+        state: started
+        enabled: yes
+        name: "{{ certbot_timer_servicename }}.timer"
+
+
