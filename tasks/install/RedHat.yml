@@ -7,15 +7,14 @@
     - name: install distro specific certbot packages (os_family == RedHat)
       package:
         name:
-          # - "{{ certbot_packages }}"
           - certbot
-          # - python2-certbot-dns-route53
+          - python2-certbot-dns-route53
           - python2-certbot-dns-digitalocean
           - python2-certbot-dns-ovh
 
-    - pip:
-        name:
-          - certbot-dns-route53
+    # - pip:
+    #     name:
+    #       - certbot-dns-route53
 
     - name: Make sure {{ certbot_timer_servicename }} is running
       systemd:

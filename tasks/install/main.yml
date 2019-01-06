@@ -8,6 +8,9 @@
         name: /var/cache/ansible/certbot
         state: directory
 
+    - debug:
+        msg: "ansible_distribution_version: {{ ansible_distribution_version }}"
+
     - name: "distro specific tasks certbot installer {{ ansible_distribution }}-{{ ansible_distribution_version }}"
       include_tasks: "{{ include_letsencrypt_tasks }}"
       with_first_found:
