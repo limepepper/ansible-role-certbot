@@ -1,0 +1,19 @@
+---
+
+- tags: [ letsencrypt, certbot ]
+  become: yes
+  block:
+
+    - name: install distro specific certbot packages (os_family == RedHat)
+      package:
+        name:
+          - certbot
+          - python3-certbot-dns-route53
+          - python3-certbot-dns-digitalocean
+          - python3-certbot-dns-ovh
+
+    - name: Make sure {{ certbot_timer_servicename }} is running
+      systemd:
+        state: started
+        enabled: yes
+        name: "{{ certbot_timer_servicename }}.timer"
