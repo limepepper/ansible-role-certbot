@@ -9,7 +9,6 @@
 
   - name: ubuntu caching problem
     apt:
-      name: foo
       update_cache: yes
 
   - name: "install shim packages {{ ansible_distribution }}-{{ ansible_distribution_major_version }}"
