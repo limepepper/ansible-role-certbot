@@ -7,21 +7,16 @@
   # this shims it in before fact gathering
   gather_facts: false
   pre_tasks:
-  - name: Install python2 for Ansible
-    raw: sh -c "test -e /usr/bin/python || ( ( test -e /usr/bin/apt && apt -qqy update && apt install -qqy python-minimal) || ( test -e /usr/bin/dnf && /usr/bin/dnf -qy install python) || ( test -e /usr/bin/yum && /usr/bin/yum -qy install python) )"
-    register: output
-    changed_when: 'output.stdout|trim() != ""'
-  - name: Gathering Facts
-    setup:
-    tags: always
-  # end of python shim
+    - name: Install python2 for Ansible
+      raw: sh -c "test -e /usr/bin/python || ( ( test -e /usr/bin/apt && apt -qqy update && apt install -qqy python-minimal) || ( test -e /usr/bin/dnf && /usr/bin/dnf -qy install python) || ( test -e /usr/bin/yum && /usr/bin/yum -qy install python) )"
+      register: output
+      changed_when: 'output.stdout|trim() != ""'
+    - name: Gathering Facts
+      setup:
+      tags: always
+    # end of python shim
 
   tasks:
-
-
-    - debug:
-        var: ansible_env
-      become: no
 
     - block:
         - name: import the role limepepper.wordpress in test.yml playbook

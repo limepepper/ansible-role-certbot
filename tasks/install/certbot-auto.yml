@@ -1,25 +1,10 @@
 ---
 
-- debug:
-    var: ansible_env
-  become: no
-
 - tags: [ certbot ]
   become: yes
   block:
 
   # https://certbot.eff.org/docs/install.html
-
-  - debug:
-      var: ansible_env
-
-  - debug:
-      var: ansible_env
-    become: no
-
-  - debug:
-      msg: "TRAVIS is {{ lookup('env','TRAVIS')  }}"
-    become: no
 
   - name: Download certbot-auto
     get_url:

@@ -21,8 +21,6 @@ script:
   # inspec version 4.3.2 broke gem installation and cli
   - inspec version
 
-  - echo "TRAVIS is '${TRAVIS}'"
-
   # Download test shim.
   - wget -O ${PWD}/tests/test.sh https://gist.github.com/tolland/45a03a95e2db57712c1e30127c34a195/raw/
   - chmod +x ${PWD}/tests/test.sh
