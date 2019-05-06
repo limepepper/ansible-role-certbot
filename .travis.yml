@@ -10,9 +10,11 @@ env:
   - distro: debian9
   - distro: fedora28
     docker_profile: tomhodder
+  - distro: fedora29
+    docker_profile: tomhodder
 
 install:
-  - gem install --no-rdoc --no-ri inspec
+  - gem install --no-document --no-ri inspec
 
 script:
   # Download test shim.
