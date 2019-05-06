@@ -34,17 +34,18 @@ control 'check-certbot-01' do
     # it { should be_allowed('execute', by: 'root') }
   end
 
-  describe command('certbot --version') do
-    its('stderr') { should eq '' }
-    its('exit_status') { should eq 0 }
-  end
+  # this not working for centos-7 repo packages, certbot outputs to stderr
+  # describe command('certbot --version') do
+  #  its('stderr') { should eq '' }
+  #  its('exit_status') { should eq 0 }
+  # end
 
   describe command('certbot --help') do
     its('stdout') { should match(%r{Certbot can obtain and install HTTPS\/TLS\/SSL certificates}) }
     its('exit_status') { should eq 0 }
   end
 
-  describe command('certbot --version  2>&1') do
+  describe command('certbot --version 2>&1') do
     its('stdout') { should match(/certbot/) }
     its('stderr') { should eq '' }
     its('exit_status') { should eq 0 }
