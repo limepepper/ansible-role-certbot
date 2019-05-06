@@ -41,10 +41,12 @@ control 'check-certbot-01' do
   # end
 
   describe command('certbot --help') do
-    its('stdout') { should match(%r{Certbot can obtain and install HTTPS\/TLS\/SSL certificates}) }
+    # not if we are using certbot-auto wrapper - is using custom help text
+    # its('stdout') { should match(%r{Certbot can obtain and install HTTPS\/TLS\/SSL certificates}) }
     its('exit_status') { should eq 0 }
   end
 
+  # some distros output to stderr (centos-7..??)
   describe command('certbot --version 2>&1') do
     its('stdout') { should match(/certbot/) }
     its('stderr') { should eq '' }
