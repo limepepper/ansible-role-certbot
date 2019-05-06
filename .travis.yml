@@ -14,7 +14,7 @@ env:
     docker_profile: tomhodder
 
 install:
-  - gem install --no-document inspec
+  - gem install --no-document inspec inspec-bin
 
 script:
   # Download test shim.
