@@ -34,6 +34,11 @@ control 'check-certbot-01' do
     # it { should be_allowed('execute', by: 'root') }
   end
 
+  describe command('certbot --version') do
+    its('stderr') { should eq '' }
+    its('exit_status') { should eq 0 }
+  end
+
   describe command('certbot --help') do
     its('stdout') { should match(%r{Certbot can obtain and install HTTPS\/TLS\/SSL certificates}) }
     its('exit_status') { should eq 0 }

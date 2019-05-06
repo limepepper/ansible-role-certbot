@@ -64,6 +64,12 @@ class CertBotWebroot():
         for i in range(len(alts)):
             certbot_cmd = certbot_cmd + " -d {0} ".format(alts[i])
 
+        result, stdout, stderr = self.module.run_command('env')
+
+        self.module.warn("result == '{0}'".format(result))
+        self.module.warn("stdout == '{0}'".format(stdout))
+        self.module.warn("stderr == '{0}'".format(stderr))
+
         self.module.warn("{0}".format(certbot_cmd))
 
         result, stdout, stderr = self.module.run_command(certbot_cmd)
@@ -82,13 +88,14 @@ class CertBotWebroot():
               # stderr=None
         else:
           self.module.warn("result code was {0}".format(result))
-          self.module.warn("stdout code was {0}".format(stdout))
-          self.module.warn("stderr code was {0}".format(stderr))
+          self.module.warn("stdout was '{0}'".format(stdout))
+          self.module.warn("stderr out '{0}'".format(stderr))
+
           result2, stdout2, stderr2 = self.module.run_command(
               'apachectl configtest')
 
           self.module.fail_json(
-              msg="stderr: %s    \n stdout: %s   \n result: %s    type: %s" % (result2, stdout2, stderr2, type(result2)))
+              msg="result of apache configtest: %s    \n stdout: %s   \n stderr: %s    type(result): %s" % (result2, stdout2, stderr2, type(result2)))
 
           if 'Challenges failed for all domains' in stderr:
               changed = True

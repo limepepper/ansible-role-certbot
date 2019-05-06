@@ -44,7 +44,6 @@ class CertBotDnsRoute53():
 
         certbot_cmd = certbot_cmd + "  --noninteractive  \
                 --agree-tos  \
-                --force-renewal \
                 --email {0}  \
                 --expand \
                 --allow-subset-of-names \
@@ -52,6 +51,9 @@ class CertBotDnsRoute53():
 
         for i in range(len(alts)):
             certbot_cmd = certbot_cmd + " -d {0} ".format(alts[i])
+
+        if self.module.params["force"]:
+            certbot_cmd = certbot_cmd + " --force-renewal "
 
         self.module.warn("{0}".format(certbot_cmd))
 
