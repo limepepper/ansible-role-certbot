@@ -13,7 +13,7 @@
           - python3-certbot-dns-ovh
 
     - name: Make sure {{ certbot_timer_servicename }} is running
-      systemd:
+      service:
         state: started
         enabled: yes
         name: "{{ certbot_timer_servicename }}.timer"
