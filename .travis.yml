@@ -10,7 +10,7 @@ env:
   - distro: debian9
   - distro: fedora28
     docker_profile: tomhodder
-  - distro: fedora29
+  # - distro: fedora29
 
 install:
   # inspec version 4.3.2 require ELA acceptance
