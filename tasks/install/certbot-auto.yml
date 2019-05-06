@@ -18,6 +18,7 @@
     shell:
       cmd: |
         /usr/local/bin/certbot-auto --non-interactive --install-only -v
+    changed_when: False
 
   - file:
       src: /opt/eff.org/certbot/venv/bin/certbot
