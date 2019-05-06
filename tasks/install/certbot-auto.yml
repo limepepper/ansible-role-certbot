@@ -1,10 +1,21 @@
 ---
 
+- debug:
+    var: ansible_env
+  become: no
+
 - tags: [ certbot ]
   become: yes
   block:
 
   # https://certbot.eff.org/docs/install.html
+
+  - debug:
+      var: ansible_env
+
+  - debug:
+      var: ansible_env
+    become: no
 
   - name: Download certbot-auto
     get_url:
@@ -13,6 +24,18 @@
       owner: root
       group: root
       mode: 0755
+    when: "'TRAVIS' not in ansible_env"
+
+  - name: Copy from role -  certbot-auto
+    copy:
+      src: certbot-auto
+      dest: /usr/local/bin/certbot-auto
+      owner: root
+      group: root
+      mode: 0755
+    when:
+      - "'TRAVIS' in ansible_env"
+      - ansible_env['TRAVIS'] == "true"
 
   - name: install certbot with certbot-auto
     shell:

@@ -7,6 +7,7 @@
   - debug:
       msg: "using the Ubuntu boot strapper (Ubuntu-generic)"
 
+  # this appears to be a travis problem.
   - name: ubuntu caching problem
     apt:
       cache_valid_time: 3600
