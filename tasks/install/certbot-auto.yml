@@ -1,0 +1,49 @@
+---
+
+- tags: [ certbot ]
+  become: yes
+  block:
+
+  # https://certbot.eff.org/docs/install.html
+
+  - name: Download certbot-auto
+    get_url:
+      url: https://dl.eff.org/certbot-auto
+      dest: /usr/local/bin/certbot-auto
+      owner: root
+      group: root
+      mode: 0755
+
+  - name: install certbot with certbot-auto
+    shell:
+      cmd: |
+        /usr/local/bin/certbot-auto --non-interactive --install-only -v
+
+  - file:
+      src: /opt/eff.org/certbot/venv/bin/certbot
+      dest: /usr/local/bin/certbot
+      owner: root
+      group: root
+      state: link
+
+  - name: Install certbot into the existing certbot-auto venv
+    pip:
+      name:
+        - certbot-dns-digitalocean
+        - certbot-dns-ovh
+        - certbot-dns-route53
+      virtualenv: /opt/eff.org/certbot/venv
+
+# Help for certbot itself cannot be provided until it is installed.
+
+#   --debug                                   attempt experimental installation
+#   -h, --help                                print this help
+#   -n, --non-interactive, --noninteractive   run without asking for user input
+#   --no-bootstrap                            do not install OS dependencies
+#   --no-permissions-check                    do not warn about file system permissions
+#   --no-self-upgrade                         do not download updates
+#   --os-packages-only                        install OS dependencies and exit
+#   --install-only                            install certbot, upgrade if needed, and exit
+#   -v, --verbose                             provide more output
+#   -q, --quiet                               provide only update/error output;
+#                                             implies --non-interactive
