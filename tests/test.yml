@@ -18,6 +18,11 @@
 
   tasks:
 
+
+    - debug:
+        var: ansible_env
+      become: no
+
     - block:
         - name: import the role limepepper.wordpress in test.yml playbook
           import_role:
