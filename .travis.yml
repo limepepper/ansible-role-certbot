@@ -11,7 +11,6 @@ env:
   - distro: fedora28
     docker_profile: tomhodder
   - distro: fedora29
-    docker_profile: tomhodder
 
 install:
   # inspec version 4.3.2 require ELA acceptance
@@ -26,7 +25,7 @@ script:
   - wget -O ${PWD}/tests/test.sh https://gist.github.com/tolland/45a03a95e2db57712c1e30127c34a195/raw/
   - chmod +x ${PWD}/tests/test.sh
 
-  - gem contents inspec
+  # - gem contents inspec
 
   # Run tests.
   - ${PWD}/tests/test.sh
