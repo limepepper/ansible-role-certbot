@@ -1,7 +1,6 @@
 ---
 
 - tags: [ certbot ]
-  become: yes
   block:
 
   # - package:
@@ -13,10 +12,12 @@
   #     repo: 'ppa:certbot/certbot'
   #     codename: trusty
 
-  - apt_repository:
+  - name: configure jessie backports repo
+    apt_repository:
       repo: deb http://ftp.debian.org/debian jessie-backports main
       state: present
 
-  - apt:
+  - name: install certbot with apt
+    apt:
       name: certbot
       default_release: jessie-backports

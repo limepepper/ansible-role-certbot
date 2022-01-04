@@ -4,7 +4,8 @@
   when: bootstrap_done is not defined
   block:
 
-    - debug:
+    - name: show a report of variables used for distro specific
+      debug:
         msg: |
           Hostname:            {{ ansible_hostname }}
           Ansible version:     {{ ansible_version.major }}.{{ ansible_version.minor }}.{{ ansible_version.revision }}
@@ -17,8 +18,6 @@
 
           Release:             {% if ansible_distribution_release is defined %}{{ ansible_distribution_release }}{% else %}<undefined>{% endif %}
 
-
-
           Python Version:      {% if ansible_python_version is defined %}{{ ansible_python_version }}{% else %}<undefined>{% endif %}
 
           default ipv4:        {% if ansible_default_ipv4 is defined and 'address' in ansible_default_ipv4 %}{{ ansible_default_ipv4.address }}{% else %}<undefined>{% endif %}
@@ -27,7 +26,7 @@
 
     - name: "Fail if Ansible is old ( {{ ansible_version.full }} ?? 2.5.0 )"
       fail: msg="We need updates in Ansible 2.5.0. Please update your kit. 'pip install -U Ansible'"
-      when: ansible_version is version('2.5.0', 'lt')
+      when: ansible_version.full is version('2.5.0', 'lt')
 
     - name: create the the creds store
       delegate_to: 127.0.0.1
@@ -35,6 +34,7 @@
       file:
         path: ~/.local/share/ansible/store
         state: directory
+        mode: '0755'
 
     - name: "distro specific bootstrapping {{ ansible_distribution }}-{{ ansible_distribution_version}}"
       include_tasks: "{{ include_tasks_bootstrap }}"
@@ -55,6 +55,7 @@
       file:
         name: "/var/cache/ansible/bootstrap"
         state: directory
+        mode: '0755'
 
 - when: lookup('env', '_DTOOLS')
   block:

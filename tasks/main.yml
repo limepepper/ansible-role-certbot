@@ -4,16 +4,6 @@
   become: yes
   block:
 
-  # boilerplate
-  - name: bootstrap enough that ansible can run most ansible modules
-    include_tasks: "bootstrap/main.yml"
-    when: bootstrap_done is not defined or lookup('env', '_DTOOLS')
-    tags: [ bootstrap ]
-
-    # boilerplate
-  - include_tasks: bootstrap/distro-vars-import2.yml
-    tags: always
-
     ## START OF MAIN TASKS SECTION ##
 
   - include_tasks: install/main.yml

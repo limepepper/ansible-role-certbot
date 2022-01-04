@@ -7,8 +7,10 @@
       file:
         name: /var/cache/ansible/certbot
         state: directory
+        mode: 0755
 
-    - debug:
+    - name: debug out the version
+      debug:
         msg: "ansible_distribution_version: {{ ansible_distribution_version }}"
 
     - name: "distro specific tasks certbot installer {{ ansible_distribution }}-{{ ansible_distribution_version }}"

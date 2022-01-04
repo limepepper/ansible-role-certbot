@@ -21,8 +21,9 @@
         loop_var: distro_specific_vars
       tags: [ always, vars ]
 
-    - debug:
-        msg: "role name {{ ( role_path| basename ) }} is {{ ( role_path| basename ) in hostvars[inventory_hostname]}}"
+    - name: debug the role_path
+      debug:
+        msg: "role name {{ ( role_path| basename ) }} is {{ ( role_path| basename ) in hostvars[inventory_hostname] }}"
 
     - name: set facts relating to logfiles
       set_fact:

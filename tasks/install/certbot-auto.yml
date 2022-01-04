@@ -32,7 +32,8 @@
         /usr/local/bin/certbot-auto --non-interactive --install-only -v
     changed_when: False
 
-  - file:
+  - name: install certbot from auto
+    file:
       src: /opt/eff.org/certbot/venv/bin/certbot
       dest: /usr/local/bin/certbot
       owner: root

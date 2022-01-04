@@ -4,9 +4,6 @@
   become: true
   block:
 
-    - debug:
-        msg: "using the Debian-9 boot strapper"
-
     - name: install shim packages for Debian 9
       apt:
         update_cache: yes

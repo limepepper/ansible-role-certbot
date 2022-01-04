@@ -2,6 +2,7 @@
 
 galaxy_info:
   role_name: certbot
+  namespace: limepepper
   author: Tom Hodder
   description: Install certbot, obtain and renew letsencrypt certs
   company: Lime Pepper Ltd

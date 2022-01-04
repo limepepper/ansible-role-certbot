@@ -3,25 +3,24 @@
 - become: true
   block:
 
-  - yum:
+  - name: install basic packages for debugging redhat instances
+    yum:
       name:
-        - wget
+        - bind-utils
+        - curl
+        - dstat
+        - gdb
+        - iotop
+        - inotify-tools
         - libselinux-python
+        - lsof
+        - lynx
+        - nmap
+        - procps
+        - strace
+        - tcpdump
         - telnet
         - wget
-        - strace
-        - gdb
-        - tcpdump
-        - lynx
-        - wget
-        - curl
-        - bind-utils
-        - iotop
-        - dstat
-        - procps
-        - lsof
-        - nmap
-        - inotify-tools
 
   # update the mlocate database in the background
   - name: update the mlocate database

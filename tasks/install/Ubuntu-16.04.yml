@@ -3,7 +3,8 @@
 - tags: [ certbot ]
   block:
 
-  - package:
+  - name: install some stuff required by debian
+    package:
       name:
         - software-properties-common
 
@@ -18,4 +19,4 @@
         - certbot
         - python-certbot-apache
         - python3-certbot-dns-digitalocean
-        - python3-certbot-dns-route53
+        # - python3-certbot-dns-route53

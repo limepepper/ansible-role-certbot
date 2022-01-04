@@ -11,7 +11,8 @@
   #     repo: 'ppa:certbot/certbot'
   #     # codename: xenial
 
-  - package:
+  - name: install certbot with package mgr
+    package:
       name:
         - certbot
         - python-certbot-apache

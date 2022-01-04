@@ -3,7 +3,8 @@
 - tags: [ letsencrypt, certbot ]
   block:
 
-  - package:
+  - name: install python34 module with package_mgr
+    package:
       name:
         - python34
         - python34-setuptools
@@ -15,12 +16,14 @@
         python3 easy_install.py pip
       creates: /usr/bin/pip3
 
-  - pip:
+  - name: install urllib3 with pip3
+    pip:
       name: urllib3
       version: 1.23
       executable: /usr/bin/pip3
 
-  - pip:
+  - name: install certbot and plugins with pip
+    pip:
       name:
         - certbot
         - certbot-dns-digitalocean
@@ -41,6 +44,7 @@
     file:
       name: /etc/cron.d
       state: directory
+      mode: '0755'
 
   - name: on centos-6, so copy in the cron job
     template:

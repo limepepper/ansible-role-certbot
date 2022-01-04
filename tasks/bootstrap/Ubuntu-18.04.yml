@@ -1,11 +1,7 @@
 ---
 
 - tags: [ bootstrap ]
-  become: true
   block:
-
-    - debug:
-        msg: "using the Ubuntu boot strapper"
 
     - name: install shim packages
       apt:

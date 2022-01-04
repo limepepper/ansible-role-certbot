@@ -4,7 +4,8 @@
   become: yes
   block:
 
-    - debug:
+    - name: debug out the version
+      debug:
         msg: "ansible_distribution_version: {{ ansible_distribution_version }}"
 
     - name: install distro specific certbot packages (os_family == RedHat)
@@ -51,5 +52,3 @@
         state: started
         enabled: yes
         name: "{{ certbot_timer_servicename }}.timer"
-
-

@@ -1,8 +1,11 @@
+---
+
 extends: default
 
 ignore: |
   .venv/
   .kitchen/
+  .kitchen*.yml
   molecule/
 
 rules:

@@ -3,9 +3,9 @@
 - tags: [ always ]
   block:
 
-    - debug:
+    - name: notification that we are in windows
+      debug:
         msg: |
           In the Windows bootstrapping task
-
 
   #  - win_chocolatey: name=pscx
