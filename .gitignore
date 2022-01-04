@@ -1,6 +1,7 @@
-# ansibl
+# ansible
 .kitchen
 .venv
+.cache
 
 # Compiled source #
 ###################
