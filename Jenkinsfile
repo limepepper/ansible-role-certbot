@@ -11,6 +11,10 @@ pipeline {
     gitParameter branchFilter: 'origin/(.*)', defaultValue: 'master', name: 'BRANCH', type: 'PT_BRANCH'
   }
 
+  triggers {
+      cron('H 06 * * 1-5')
+  }
+
     stages {
         stage('Build') {
             steps {
