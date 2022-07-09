@@ -11,9 +11,8 @@ pipeline {
                     name: 'BRANCH',
                     type: 'PT_BRANCH'
     }
-
     stages {
-         stage('Read Jenkinsfile') {
+        stage('Read Jenkinsfile') {
             when {
                 expression { return parameters.Refresh == true }
             }
