@@ -1,44 +1,46 @@
 
 pipeline {
-    agent any
+  agent any
 
-    parameters {
-      booleanParam(name: 'Refresh',
-            defaultValue: false,
-            description: 'Read Jenkinsfile and exit.')
-      gitParameter  branchFilter: 'origin/(.*)',
-                    defaultValue: 'master',
-                    name: 'BRANCH',
-                    type: 'PT_BRANCH'
+  parameters {
+    booleanParam(name: 'Refresh',
+          defaultValue: false,
+          description: 'Read Jenkinsfile and exit.')
+    gitParameter  branchFilter: 'origin/(.*)',
+                  defaultValue: 'master',
+                  name: 'BRANCH',
+                  type: 'PT_BRANCH'
+  }
+  stages {
+    stage('Read Jenkinsfile') {
+        when {
+            expression { return parameters.Refresh == true }
+        }
+        steps {
+            echo("Ended pipeline early.")
+        }
     }
-    stages {
-        stage('Read Jenkinsfile') {
-            when {
-                expression { return parameters.Refresh == true }
-            }
+    stage('Run Jenkinsfile') {
+      when {
+          expression { return parameters.Refresh == false }
+      }
+      stages {
+        stage('Build') {
             steps {
-                echo("Ended pipeline early.")
+                echo 'Building..'
             }
         }
-        stage('Run Jenkinsfile') {
-            when {
-                expression { return parameters.Refresh == false }
-            }
-            stage('Build') {
-                steps {
-                    echo 'Building..'
-                }
-            }
-            stage('Test') {
-                steps {
-                    echo 'Testing..'
-                }
-            }
-            stage('Deploy') {
-                steps {
-                    echo 'Deploying....'
-                }
+        stage('Test') {
+            steps {
+                echo 'Testing..'
             }
         }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying....'
+            }
+        }
+      }
     }
+  }
 }
