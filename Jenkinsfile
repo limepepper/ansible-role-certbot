@@ -18,19 +18,6 @@ pipeline {
     cron('H 06 * * 1-5')
   }
 
-  matrix {
-    axes {
-      axis {
-        name 'PLATFORM'
-        values 'linux', 'mac', 'windows'
-      }
-      axis {
-          name 'BROWSER'
-          values 'chrome', 'edge', 'firefox', 'safari'
-      }
-    }
-  }
-
   stages {
     stage('Read Jenkinsfile') {
       when {
@@ -49,6 +36,19 @@ pipeline {
         expression { return params.Refresh == false }
       }
       stages {
+
+        matrix {
+          axes {
+            axis {
+              name 'PLATFORM'
+              values 'linux', 'mac', 'windows'
+            }
+            axis {
+                name 'BROWSER'
+                values 'chrome', 'edge', 'firefox', 'safari'
+            }
+          }
+        }
         stage('Validation') {
             steps {
               script {
