@@ -7,15 +7,15 @@ pipeline {
   }
 
   parameters {
-    booleanParam( name: 'Refresh',
-                  defaultValue: false,
-                  description: 'Read Jenkinsfile and exit.'
+    booleanParam(   name: 'Refresh',
+                    defaultValue: false,
+                    description: 'Read Jenkinsfile and exit.'
                 )
 
-    gitParameter  branchFilter: 'origin/(.*)',
-                  defaultValue: 'master',
-                  name: 'BRANCH',
-                  type: 'PT_BRANCH'
+    gitParameter    branchFilter: 'origin/(.*)',
+                    defaultValue: 'master',
+                    name: 'BRANCH',
+                    type: 'PT_BRANCH'
 
     extendedChoice  defaultValue: 'blue,green,yellow,blue',
                     description: '',
