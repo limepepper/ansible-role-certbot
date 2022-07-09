@@ -1,30 +1,8 @@
 
 pipeline {
-  agent any
+    agent any
 
-  parameters {
-    booleanParam(name: 'Refresh',
-          defaultValue: false,
-          description: 'Read Jenkinsfile and exit.')
-    gitParameter  branchFilter: 'origin/(.*)',
-                  defaultValue: 'master',
-                  name: 'BRANCH',
-                  type: 'PT_BRANCH'
-  }
-  stages {
-    stage('Read Jenkinsfile') {
-        when {
-            expression { return parameters.Refresh == true }
-        }
-        steps {
-            echo("Ended pipeline early.")
-        }
-    }
-    stage('Run Jenkinsfile') {
-      when {
-          expression { return parameters.Refresh == false }
-      }
-      stages {
+    stages {
         stage('Build') {
             steps {
                 echo 'Building..'
@@ -40,7 +18,5 @@ pipeline {
                 echo 'Deploying....'
             }
         }
-      }
     }
-  }
 }
