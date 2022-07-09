@@ -35,19 +35,19 @@ pipeline {
       when {
         expression { return params.Refresh == false }
       }
-      stages {
 
-        matrix {
-          axes {
-            axis {
-              name 'PLATFORM'
-              values 'linux', 'mac', 'windows'
-            }
-            axis {
-                name 'BROWSER'
-                values 'chrome', 'edge', 'firefox', 'safari'
-            }
+      matrix {
+        axes {
+          axis {
+            name 'PLATFORM'
+            values 'linux', 'mac', 'windows'
           }
+          axis {
+              name 'BROWSER'
+              values 'chrome', 'edge', 'firefox', 'safari'
+          }
+        }
+        stages {
           stage('Validation') {
               steps {
                 script {
