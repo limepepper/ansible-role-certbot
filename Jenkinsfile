@@ -35,46 +35,33 @@ pipeline {
       when {
         expression { return params.Refresh == false }
       }
-
-      matrix {
-        axes {
-          axis {
-            name 'PLATFORM'
-            values 'linux', 'mac', 'windows'
-          }
-          axis {
-              name 'BROWSER'
-              values 'chrome', 'edge', 'firefox', 'safari'
+      stages {
+        stage('Validation') {
+            steps {
+              script {
+                  currentBuild.displayName = "Build job ${PLATFORM}"
+                  currentBuild.description = "This is the description of a build job"
+              }
+              echo 'Validating and setting job name'
+            }
+        }
+        stage('Build') {
+          steps {
+              echo 'Building..'
+              sh '''
+              ls -lah
+              pwd
+              '''
           }
         }
-        stages {
-          stage('Validation') {
-              steps {
-                script {
-                    currentBuild.displayName = "Build job ${PLATFORM}"
-                    currentBuild.description = "This is the description of a build job"
-                }
-                echo 'Validating and setting job name'
-              }
+        stage('Test') {
+          steps {
+              echo 'Testing..'
           }
-          stage('Build') {
-            steps {
-                echo 'Building..'
-                sh '''
-                ls -lah
-                pwd
-                '''
-            }
-          }
-          stage('Test') {
-            steps {
-                echo 'Testing..'
-            }
-          }
-          stage('Deploy') {
-            steps {
-                echo 'Deploying....'
-            }
+        }
+        stage('Deploy') {
+          steps {
+              echo 'Deploying....'
           }
         }
       }
