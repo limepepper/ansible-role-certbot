@@ -51,7 +51,7 @@ pipeline {
           stage('Validation') {
               steps {
                 script {
-                    currentBuild.displayName = "Build job"
+                    currentBuild.displayName = "Build job ${PLATFORM}"
                     currentBuild.description = "This is the description of a build job"
                 }
                 echo 'Validating and setting job name'
