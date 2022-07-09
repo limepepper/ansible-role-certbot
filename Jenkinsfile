@@ -24,6 +24,10 @@ pipeline {
         name 'PLATFORM'
         values 'linux', 'mac', 'windows'
       }
+      axis {
+          name 'BROWSER'
+          values 'chrome', 'edge', 'firefox', 'safari'
+      }
     }
   }
 
