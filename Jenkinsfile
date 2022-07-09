@@ -21,7 +21,11 @@ pipeline {
           expression { return params.Refresh == true }
       }
       steps {
-          echo("Ended pipeline early.")
+        echo("Ended pipeline early.")
+        script {
+            currentBuild.displayName = "Parameter Initialization"
+            currentBuild.description = "Reloading job parameters"
+        }
       }
     }
     stage('Run Jenkinsfile') {
