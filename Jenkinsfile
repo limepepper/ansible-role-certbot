@@ -13,19 +13,32 @@ pipeline {
     }
 
     stages {
-        stage('Build') {
+         stage('Read Jenkinsfile') {
+            when {
+                expression { return parameters.Refresh == true }
+            }
             steps {
-                echo 'Building..'
+                echo("Ended pipeline early.")
             }
         }
-        stage('Test') {
-            steps {
-                echo 'Testing..'
+        stage('Run Jenkinsfile') {
+            when {
+                expression { return parameters.Refresh == false }
             }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying....'
+            stage('Build') {
+                steps {
+                    echo 'Building..'
+                }
+            }
+            stage('Test') {
+                steps {
+                    echo 'Testing..'
+                }
+            }
+            stage('Deploy') {
+                steps {
+                    echo 'Deploying....'
+                }
             }
         }
     }
