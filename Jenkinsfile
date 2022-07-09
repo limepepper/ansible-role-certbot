@@ -57,7 +57,7 @@ pipeline {
                 echo 'Validating and setting job name'
               }
           }
-          stage('Build ${PLATFORM} ${BROWSER}') {
+          stage("Build ${PLATFORM} ${BROWSER}") {
             steps {
                 echo 'Building..'
                 sh '''
