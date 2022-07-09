@@ -18,7 +18,7 @@ pipeline {
   stages {
     stage('Read Jenkinsfile') {
         when {
-            expression { return parameters.Refresh == true }
+            expression { return params.Refresh == true }
         }
         steps {
             echo("Ended pipeline early.")
