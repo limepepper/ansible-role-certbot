@@ -1,9 +1,12 @@
 
 pipeline {
-    agent any
+  agent any
+
+  environment {
+    fwefwef = "fwefew"
+  }
 
   parameters {
-
     booleanParam(name: 'Refresh',
           defaultValue: false,
           description: 'Read Jenkinsfile and exit.')
@@ -12,55 +15,64 @@ pipeline {
   }
 
   triggers {
-      cron('H 06 * * 1-5')
+    cron('H 06 * * 1-5')
+  }
+
+  matrix {
+    axes {
+      axis {
+        name 'PLATFORM'
+        values 'linux', 'mac', 'windows'
+      }
+    }
   }
 
   stages {
     stage('Read Jenkinsfile') {
       when {
-          expression { return params.Refresh == true }
+        expression { return params.Refresh == true }
       }
       steps {
         echo("Ended pipeline early.")
         script {
-            currentBuild.displayName = "Parameter Initialization"
-            currentBuild.description = "Reloading job parameters"
+          currentBuild.displayName = "Parameter Initialization"
+          currentBuild.description = "Reloading job parameters"
         }
       }
     }
     stage('Run Jenkinsfile') {
       when {
-          expression { return params.Refresh == false }
+        expression { return params.Refresh == false }
       }
       stages {
-          stage('Validation') {
-              steps {
-                script {
-                    currentBuild.displayName = "Build job"
-                    currentBuild.description = "This is the description of a build job"
-                }
-                echo 'Validating and setting job name'
+        stage('Validation') {
+            steps {
+              script {
+                  currentBuild.displayName = "Build job"
+                  currentBuild.description = "This is the description of a build job"
               }
+              echo 'Validating and setting job name'
+            }
+        }
+        stage('Build') {
+          steps {
+              echo 'Building..'
+              sh '''
+              ls -lah
+              pwd
+              '''
           }
-          stage('Build') {
-              steps {
-                  echo 'Building..'
-                  sh '''
-                  ls -lah
-                  pwd
-                  '''
-              }
+        }
+        stage('Test') {
+          steps {
+              echo 'Testing..'
           }
-          stage('Test') {
-              steps {
-                  echo 'Testing..'
-              }
+        }
+        stage('Deploy') {
+          steps {
+              echo 'Deploying....'
           }
-          stage('Deploy') {
-              steps {
-                  echo 'Deploying....'
-              }
-          }
+        }
       }
     }
   }
