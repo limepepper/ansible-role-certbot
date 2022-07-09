@@ -1,7 +1,6 @@
 ---
 
 - tags: [ certbot ]
-  become: yes
   block:
 
     ## START OF MAIN TASKS SECTION ##

@@ -1,9 +1,8 @@
-#!/usr/bin/python
+# -*- mode: python -*-
 # -*- coding: utf-8 -*-
 
-# this line must be written exactly that way,
-# as Ansible will replace it with the "imported" code
-# from ansible.module_utils.basic import *
+from __future__ import (absolute_import, division, print_function)
+__metaclass__ = type
 
 from ansible.module_utils.basic import AnsibleModule
 
@@ -17,6 +16,7 @@ from ansible.module_utils.CertBotWebrootRenewal import CertBotWebrootRenewal
 import os
 
 def main():
+
     module = AnsibleModule(
         argument_spec={
             'domain': {'required': True, 'type': 'str'},
@@ -46,6 +46,8 @@ def main():
         },
         supports_check_mode=False
     )
+
+    module.warn("GOT HERE2")
 
     domain = module.params["domain"]
 
@@ -87,7 +89,6 @@ def main():
     else:
         module.warn("returning in error here - After Renew: %s" % resp)
         module.fail_json(**resp)
-
 
 if __name__ == '__main__':
     main()

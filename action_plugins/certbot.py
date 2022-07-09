@@ -11,7 +11,6 @@ from ansible.module_utils._text import to_bytes, to_text
 
 from ansible.plugins.action.copy import REAL_FILE_ARGS, _create_remote_file_args
 
-
 # from ansible.plugins.action.template import ActionModule as _ActionModule
 
 # import pprint
