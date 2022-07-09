@@ -17,16 +17,17 @@ pipeline {
 
   stages {
     stage('Read Jenkinsfile') {
-        when {
-            expression { return params.Refresh == true }
-        }
-        steps {
-            echo("Ended pipeline early.")
-        }
-
+      when {
+          expression { return params.Refresh == true }
+      }
+      steps {
+          echo("Ended pipeline early.")
+      }
     }
     stage('Run Jenkinsfile') {
-
+      when {
+          expression { return params.Refresh == false }
+      }
       stages {
           stage('Build') {
               steps {
