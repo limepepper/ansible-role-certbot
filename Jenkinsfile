@@ -15,6 +15,14 @@ pipeline {
       cron('H 06 * * 1-5')
   }
 
+  stages {
+    stage('Read Jenkinsfile') {
+        steps {
+            echo("Ended pipeline early.")
+        }
+
+    }
+
     stages {
         stage('Build') {
             steps {
@@ -32,4 +40,5 @@ pipeline {
             }
         }
     }
+  }
 }
