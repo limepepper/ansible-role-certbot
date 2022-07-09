@@ -48,33 +48,33 @@ pipeline {
                 values 'chrome', 'edge', 'firefox', 'safari'
             }
           }
-        }
-        stage('Validation') {
-            steps {
-              script {
-                  currentBuild.displayName = "Build job"
-                  currentBuild.description = "This is the description of a build job"
+          stage('Validation') {
+              steps {
+                script {
+                    currentBuild.displayName = "Build job"
+                    currentBuild.description = "This is the description of a build job"
+                }
+                echo 'Validating and setting job name'
               }
-              echo 'Validating and setting job name'
+          }
+          stage('Build') {
+            steps {
+                echo 'Building..'
+                sh '''
+                ls -lah
+                pwd
+                '''
             }
-        }
-        stage('Build') {
-          steps {
-              echo 'Building..'
-              sh '''
-              ls -lah
-              pwd
-              '''
           }
-        }
-        stage('Test') {
-          steps {
-              echo 'Testing..'
+          stage('Test') {
+            steps {
+                echo 'Testing..'
+            }
           }
-        }
-        stage('Deploy') {
-          steps {
-              echo 'Deploying....'
+          stage('Deploy') {
+            steps {
+                echo 'Deploying....'
+            }
           }
         }
       }
