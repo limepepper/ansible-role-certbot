@@ -3,7 +3,13 @@ pipeline {
     agent any
 
     parameters {
-      gitParameter branchFilter: 'origin/(.*)', defaultValue: 'master', name: 'BRANCH', type: 'PT_BRANCH'
+      booleanParam(name: 'Refresh',
+            defaultValue: false,
+            description: 'Read Jenkinsfile and exit.')
+      gitParameter  branchFilter: 'origin/(.*)',
+                    defaultValue: 'master',
+                    name: 'BRANCH',
+                    type: 'PT_BRANCH'
     }
 
     stages {
