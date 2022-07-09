@@ -33,6 +33,15 @@ pipeline {
           expression { return params.Refresh == false }
       }
       stages {
+          stage('Validation') {
+              steps {
+                script {
+                    currentBuild.displayName = "Build job"
+                    currentBuild.description = "This is the description of a build job"
+                }
+                echo 'Validating and setting job name'
+              }
+          }
           stage('Build') {
               steps {
                   echo 'Building..'
